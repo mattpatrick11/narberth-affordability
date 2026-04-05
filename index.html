@@ -427,6 +427,94 @@
       .listings-table { font-size: 0.72rem; }
     }
 
+
+    /* HOUSING TAB SCOPED */
+    :root { --narberth: #1a3a5c; --ardmore: #2d5a27; }
+    .badge-yes { background:#28a745;color:white; }
+    .badge-no  { background:#dc3545;color:white; }
+    .badge-partial { background:#fd7e14;color:white; }
+    .tag { display:inline-block;font-size:10px;font-weight:bold;padding:1px 6px;border-radius:3px;margin-left:4px;vertical-align:middle;font-family:-apple-system,sans-serif; }
+    .tag-old { background:#17a2b8;color:white; }
+    .tag-new { background:#e63946;color:white; }
+    #tab-housing { font-family:'Georgia',serif;background:#fff;color:#1a1a2e;line-height:1.7; }
+    #tab-housing a { color:#1a5fa8; }
+    #tab-housing p { margin-bottom:12px; }
+    #tab-housing .nav { position:sticky;top:var(--tab-h);background:#0d1f3c;color:white;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+    #tab-housing .nav-inner { max-width:960px;margin:0 auto;padding:0 20px;display:flex;align-items:center;flex-wrap:wrap; }
+    #tab-housing .nav-brand { font-size:13px;font-weight:bold;padding:14px 0;flex:1;opacity:0.9; }
+    #tab-housing .nav-links { display:flex;flex-wrap:wrap; }
+    #tab-housing .nav-links a { color:rgba(255,255,255,0.8);text-decoration:none;font-size:12px;padding:14px;display:block;font-family:-apple-system,sans-serif; }
+    #tab-housing .nav-links a:hover { background:rgba(255,255,255,0.12);color:white; }
+    #tab-housing .hero { background:linear-gradient(135deg,#0d1f3c 0%,#1a3a5c 60%,#1e4a3a 100%);color:white;padding:80px 20px 70px;text-align:center; }
+    #tab-housing .hero-tag { display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 16px;margin-bottom:24px; }
+    #tab-housing .hero h1 { font-size:clamp(22px,4vw,38px);font-weight:bold;line-height:1.25;max-width:760px;margin:0 auto 18px; }
+    #tab-housing .hero p { font-size:clamp(14px,2vw,17px);opacity:0.85;max-width:620px;margin:0 auto;line-height:1.7; }
+    #tab-housing .hero-stats { display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.2); }
+    #tab-housing .stat { text-align:center; }
+    #tab-housing .stat-num { font-size:28px;font-weight:bold; }
+    #tab-housing .stat-label { font-size:11px;opacity:0.7;font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px; }
+    #tab-housing .hero-meta { font-size:11px;opacity:0.55;font-family:-apple-system,sans-serif;margin-top:20px; }
+    #tab-housing .container { max-width:960px;margin:0 auto;padding:0 20px; }
+    #tab-housing .part-header { padding:50px 20px 40px;margin:0; }
+    #tab-housing .part-header.narberth { background:var(--narberth);color:white; }
+    #tab-housing .part-header.ardmore  { background:var(--ardmore);color:white; }
+    #tab-housing .part-header .part-num { font-family:-apple-system,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:0.7;margin-bottom:10px; }
+    #tab-housing .part-header h2 { font-size:clamp(18px,3vw,26px);line-height:1.3;margin-bottom:10px; }
+    #tab-housing .part-header p  { font-size:14px;opacity:0.82;max-width:680px; }
+    #tab-housing .section { padding:40px 0;border-bottom:1px solid #e0e0e0;scroll-margin-top:135px; }
+    #tab-housing .section:last-child { border-bottom:none; }
+    #tab-housing #overview,#tab-housing #narberth,#tab-housing #ardmore,#tab-housing #conclusion { scroll-margin-top:135px; }
+    #tab-housing .section-title { font-size:18px;color:var(--narberth);border-bottom:2px solid var(--narberth);padding-bottom:6px;margin-bottom:18px; }
+    #tab-housing .section-title.green { color:var(--ardmore);border-color:var(--ardmore); }
+    #tab-housing h3.sub { font-size:15px;color:#2c5f8f;margin:22px 0 10px; }
+    #tab-housing h3.sub.green { color:#3a7a30; }
+    #tab-housing .callout { background:#eef4fb;border-left:4px solid var(--narberth);padding:14px 18px;margin:18px 0;border-radius:0 4px 4px 0;font-size:15px; }
+    #tab-housing .callout strong { color:var(--narberth); }
+    #tab-housing .callout.green { background:#f0f7ee;border-color:var(--ardmore); }
+    #tab-housing .callout.green strong { color:var(--ardmore); }
+    #tab-housing .callout.amber { background:#fff8e1;border-color:#e6a817; }
+    #tab-housing .callout.amber strong { color:#856404; }
+    #tab-housing .callout.red { background:#fef9f9;border:2px solid #c0392b;border-radius:4px;padding:16px 18px; }
+    #tab-housing .callout.red h3 { color:#c0392b;margin-bottom:8px;font-size:15px; }
+    #tab-housing .summary-box { border:2px solid var(--narberth);border-radius:6px;padding:18px 22px;margin:24px 0;background:#f0f6ff; }
+    #tab-housing .summary-box.green { border-color:var(--ardmore);background:#f0f7ee; }
+    #tab-housing .summary-box h3 { color:var(--narberth);margin-bottom:10px;font-size:16px; }
+    #tab-housing .summary-box.green h3 { color:var(--ardmore); }
+    #tab-housing .summary-box ul { padding-left:22px; }
+    #tab-housing .summary-box ul li { margin-bottom:6px;font-size:14px; }
+    #tab-housing .table-wrap { overflow-x:auto;margin:16px 0; }
+    #tab-housing table { width:100%;border-collapse:collapse;font-size:14px; }
+    #tab-housing th { background:var(--narberth);color:white;padding:9px 11px;text-align:left;font-size:13px;font-weight:bold; }
+    #tab-housing th.green-th { background:var(--ardmore); }
+    #tab-housing td { padding:8px 11px;border-bottom:1px solid #e0e8f0;vertical-align:top; }
+    #tab-housing tr:nth-child(even) td { background:#f5f8fc; }
+    #tab-housing .highlight-row td { background:#d4edda !important;font-weight:600;color:#155724; }
+    #tab-housing .luxury-row td { background:#fce8e8 !important;color:#721c24; }
+    #tab-housing .listing-group { margin-bottom:28px; }
+    #tab-housing .listing-group-title { background:#2c5f8f;color:white;padding:9px 14px;font-size:14px;font-weight:bold;border-radius:4px 4px 0 0; }
+    #tab-housing .listing-group-title.green-bg { background:#3a7a30; }
+    #tab-housing .listing-table { width:100%;border-collapse:collapse;font-size:13px; }
+    #tab-housing .listing-table th { background:#3a7abf;color:white;padding:7px 9px;font-size:12.5px; }
+    #tab-housing .listing-table th.green-th2 { background:#4a9a3e; }
+    #tab-housing .listing-table td { padding:7px 9px;border-bottom:1px solid #ddd;vertical-align:top;line-height:1.4; }
+    #tab-housing .listing-table tr:nth-child(even) td { background:#f9fbfd; }
+    #tab-housing .compare-strip { background:#0d1f3c;color:white;padding:40px 20px; }
+    #tab-housing .compare-grid { max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:30px; }
+    #tab-housing .compare-card { background:rgba(255,255,255,0.08);border-radius:8px;padding:22px 24px; }
+    #tab-housing .compare-card h3 { font-size:16px;margin-bottom:12px;opacity:0.9; }
+    #tab-housing .compare-card ul { padding-left:18px;font-size:13px;opacity:0.85; }
+    #tab-housing .compare-card ul li { margin-bottom:5px; }
+    #tab-housing .compare-card .big-num { font-size:36px;font-weight:bold;margin-bottom:4px; }
+    #tab-housing .compare-card .big-label { font-size:11px;opacity:0.6;text-transform:uppercase;letter-spacing:0.5px;font-family:-apple-system,sans-serif; }
+    #tab-housing .footnote { background:#f8f9fa;padding:30px 20px;font-size:12px;color:#555;border-top:1px solid #e0e0e0; }
+    #tab-housing .footnote .container { max-width:960px;margin:0 auto; }
+    @media (max-width:700px) {
+      #tab-housing .compare-grid { grid-template-columns:1fr; }
+      #tab-housing th,#tab-housing td { font-size:12px;padding:6px 7px; }
+      #tab-housing .hero { padding:50px 16px 45px; }
+      #tab-housing .hero-stats { gap:24px; }
+    }
+
     /* ═══════════ AMI BAR & MAP HEADER FIXES ═══════════ */
     .map-header p { color: rgba(255,255,255,0.82) !important; }
     .ami-bar table tbody tr,
@@ -459,9 +547,9 @@
 
 <!-- ══════════════════════ TOP TAB BAR ══════════════════════ -->
 <div id="tab-bar">
-  <button class="tab-btn active" onclick="showTab('rentals', this)">
+  <button class="tab-btn active" onclick="showTab('housing', this)">
     <span class="tab-num">Tab 1</span>
-    📊 Rental Market Analysis
+    🏘️ Housing Analysis
   </button>
   <div class="tab-divider"></div>
   <button class="tab-btn" onclick="showTab('map', this)">
@@ -478,216 +566,657 @@
 <!-- ══════════════════════════════════════════════════════════════
      TAB 1 — RENTAL MARKET ANALYSIS
 ══════════════════════════════════════════════════════════════ -->
-<div id="tab-rentals" class="tab-section active">
+<div id="tab-housing" class="tab-section active">
 
-  <header class="page-header">
-    <div class="page-header-inner">
-      <div class="header-eyebrow">
-        <span class="header-badge">🏘️ Exploratory Research</span>
-        <span class="header-new">2025 Report</span>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Narberth Housing Analysis &mdash; March 2026</div>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#narberth">Narberth</a>
+      <a href="#ardmore">Ardmore</a>
+      <a href="#conclusion">Conclusion</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">Borough of Narberth &nbsp;·&nbsp; Montgomery County, PA</div>
+    <h1>Does Narberth Need New Construction to Create Affordable Housing?</h1>
+    <p>A two-part market analysis examining current rental listings in Narberth and Ardmore, PA against the Borough's own proposed affordability definition.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">$1,522</div>
+        <div class="stat-label">Max rent (incl. utilities) — 1 person</div>
       </div>
-      <h1>Narberth, PA — <span>Rental Market</span> Analysis</h1>
-      <p>Historical rent trends, affordability benchmarks, and Main Line comparisons for zip code 19072. Built from publicly available HUD and Zillow data through early 2026.</p>
-      <div class="header-meta">
-        <span>📍 Narberth Borough &nbsp;·&nbsp; Montgomery County, PA &nbsp;·&nbsp; ZIP 19072</span>
-        <span>📅 Data through February 2026</span>
-        <span>📂 HUD SAFMR (FY2021–2025) &nbsp;+&nbsp; Zillow ZORI</span>
+      <div class="stat">
+        <div class="stat-num">$1,760</div>
+        <div class="stat-label">Max rent (incl. utilities) — 2 person</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">$1,999</div>
+        <div class="stat-label">Max rent (incl. utilities) — 3 person</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">$2,238</div>
+        <div class="stat-label">Max rent (incl. utilities) — 4 person</div>
       </div>
     </div>
-  </header>
+    <div class="hero-meta">Thresholds: 80% AMI (MFI $119,400) · 30% income · +$150/mo utilities · Zillow, Apartments.com, Realtor.com · Updated March 2026</div>
+  </div>
+</div>
 
-  <nav class="inner-nav">
-    <div class="inner-nav-inner">
-      <a href="#overview">📊 Overview</a>
-      <a href="#hud-history">📋 HUD History</a>
-      <a href="#mainline">🗺️ Main Line Comps</a>
-      <a href="#affordability">💰 Affordability</a>
-      <a href="#trend">📈 Trends</a>
-      <a href="#context">⚖️ Policy Context</a>
-      <a href="#data-notes">🔬 Data Notes</a>
+<!-- OVERVIEW -->
+<div id="overview">
+  <div class="compare-strip">
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="big-num">35</div>
+        <div class="big-label">Active rental listings — Narberth (19072)</div>
+        <h3 style="margin-top:18px;">What the data shows:</h3>
+        <ul>
+          <li>~6 units qualify for single earners</li>
+          <li>~10 units qualify for 2-person households</li>
+          <li>3–7 units qualify for families of 3–4</li>
+          <li>Affordable stock exists across all household sizes</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <div class="big-num">186</div>
+        <div class="big-label">Active rental listings — Ardmore (19003)</div>
+        <h3 style="margin-top:18px;">What 5× the inventory bought:</h3>
+        <ul>
+          <li>New construction 1BR starts at <strong>$1,978/mo</strong></li>
+          <li>New construction 3BR goes up to <strong>$11,300/mo</strong></li>
+          <li>0 of 6 new construction communities are affordable</li>
+          <li>Affordable units come entirely from buildings built 1926–1975</li>
+        </ul>
+      </div>
     </div>
-  </nav>
+  </div>
+</div>
 
-  <main class="page-main">
+<!-- ── REPORT 1: NARBERTH ── -->
+<div id="narberth">
+  <div class="part-header narberth">
+    <div class="container">
+      <div class="part-num">Report 1 of 2</div>
+      <h2>🏠 Narberth Already Has Affordable Housing</h2>
+      <p>Active rental listings in the Borough of Narberth, PA 19072, analyzed against the Borough's own proposed affordability criteria — for singles through families of four.</p>
+    </div>
+  </div>
 
-    <section id="overview">
-      <div class="section-header">
-        <div class="section-title">📊 Snapshot: Narberth Rental Market</div>
-        <div class="section-sub">The headline numbers as of early 2026 — combining official HUD benchmarks with Zillow's observed rent index. Note: Narberth's small size means limited granular data exists; where 19072-specific data is sparse, neighboring Main Line zips serve as proxies.</div>
-      </div>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="stat-label">Zillow ZORI — All Homes (19072)</div><div class="stat-value">$3,575</div><div class="stat-change neutral">Feb 2026 — only available ZORI data point for this zip</div></div>
-        <div class="stat-card"><div class="stat-label">HUD FMR — Studio / 0BR (FY2025)</div><div class="stat-value">$1,800</div><div class="stat-change up">▲ +7.8% vs FY2024</div></div>
-        <div class="stat-card"><div class="stat-label">HUD FMR — 1 Bedroom (FY2025)</div><div class="stat-value">$1,980</div><div class="stat-change up">▲ +6.5% vs FY2024</div></div>
-        <div class="stat-card"><div class="stat-label">HUD FMR — 2 Bedroom (FY2025)</div><div class="stat-value">$2,360</div><div class="stat-change up">▲ +5.8% vs FY2024</div></div>
-        <div class="stat-card"><div class="stat-label">HUD FMR — 3 Bedroom (FY2025)</div><div class="stat-value">$2,840</div><div class="stat-change up">▲ +5.2% vs FY2024</div></div>
-        <div class="stat-card"><div class="stat-label">4-Year Increase (1BR, FY2021→FY2025)</div><div class="stat-value">+47%</div><div class="stat-change up">$1,350 → $1,980 in 4 fiscal years</div></div>
-      </div>
-      <div class="insight-box"><strong>The big picture:</strong> HUD's official 1-bedroom Fair Market Rent for Narberth has risen 47% in just four years. The single Zillow market-rate data point ($3,575 for all home types) sits dramatically above HUD's income-weighted benchmarks — reflecting that actual asking rents for larger or single-family units are in a different league entirely. Narberth has become one of the most expensive rental markets in Montgomery County.</div>
-    </section>
+  <div class="container">
 
-    <hr class="section-divider">
-
-    <section id="hud-history">
-      <div class="section-header">
-        <div class="section-title">📋 HUD Fair Market Rents — Full History</div>
-        <div class="section-sub">HUD's Small Area Fair Market Rents (SAFMRs) are the most reliable, publicly available, zip-level annual rent benchmarks. They represent the 40th percentile of asking rents in the broader Philadelphia-Camden-Wilmington MSA — a floor, not a ceiling. Five full fiscal years of data for ZIP 19072.</div>
+    <!-- THRESHOLDS -->
+    <div class="section">
+      <h2 class="section-title">Part 1 — Affordability Thresholds</h2>
+      <p>The Borough proposes defining "affordable housing" as units renting at no more than <strong>30% of gross monthly income at 80% of the Area Median Income (AMI)</strong>.</p>
+      <div class="callout">
+        <strong>Median Family Income:</strong> $119,400 &nbsp;·&nbsp; <strong>80% AMI (4-Person Base):</strong> $95,520<br>
+        <em>Per-household figures use standard HUD adjustment factors (70/80/90/100% of 4-person base)</em>
       </div>
-      <div class="chart-card">
-        <div class="chart-title">HUD Fair Market Rents by Bedroom Count — Narberth 19072 (FY2021–FY2025)</div>
-        <div class="chart-wrap-lg"><canvas id="hudBarChart"></canvas></div>
+      <div class="callout amber">
+        <strong>⚡ Utilities Adjustment:</strong> A standard $150/month utility cost has been added to all listed rents for affordability calculations. A unit is considered affordable only if <strong>rent + $150 utilities ≤ 30% of gross monthly income at 80% AMI</strong>. The "Max Affordable Rent" column below reflects the maximum listed rent a unit may charge and still qualify.
       </div>
-      <div class="table-card" style="margin-top:1.25rem;">
+      <div class="table-wrap">
         <table>
-          <thead><tr><th>Fiscal Year</th><th>Studio (0BR)</th><th>1 Bedroom</th><th>2 Bedroom</th><th>3 Bedroom</th><th>1BR YoY Change</th><th>2BR YoY Change</th></tr></thead>
-          <tbody>
-            <tr><td><strong>FY2021</strong></td><td>$1,170</td><td>$1,350</td><td>$1,640</td><td>$2,040</td><td class="neutral">—</td><td class="neutral">—</td></tr>
-            <tr><td><strong>FY2022</strong></td><td>$1,210</td><td>$1,380</td><td>$1,670</td><td>$2,060</td><td><span class="badge badge-amber">▲ +2.2%</span></td><td><span class="badge badge-amber">▲ +1.8%</span></td></tr>
-            <tr><td><strong>FY2023</strong></td><td>$1,390</td><td>$1,570</td><td>$1,890</td><td>$2,300</td><td><span class="badge badge-red">▲ +13.8%</span></td><td><span class="badge badge-red">▲ +13.2%</span></td></tr>
-            <tr><td><strong>FY2024</strong></td><td>$1,670</td><td>$1,860</td><td>$2,230</td><td>$2,700</td><td><span class="badge badge-red">▲ +18.5%</span></td><td><span class="badge badge-red">▲ +18.0%</span></td></tr>
-            <tr><td><strong>FY2025</strong></td><td>$1,800</td><td>$1,980</td><td>$2,360</td><td>$2,840</td><td><span class="badge badge-amber">▲ +6.5%</span></td><td><span class="badge badge-amber">▲ +5.8%</span></td></tr>
-            <tr style="background:#f0f4ff;font-weight:700;"><td><strong>4-Year Total</strong></td><td>+53.8%</td><td>+46.7%</td><td>+43.9%</td><td>+39.2%</td><td colspan="2" style="color:var(--red);">Steepest jump: FY2023–FY2024</td></tr>
-          </tbody>
+          <tr>
+            <th>Household Size</th>
+            <th>80% AMI (Annual)</th>
+            <th>Monthly Income</th>
+            <th>Total Housing Budget (30%)</th>
+            <th>Less $150 Utilities</th>
+            <th>Max Affordable Rent</th>
+          </tr>
+          <tr><td><strong>1 Person</strong></td><td>$66,864</td><td>$5,572</td><td>$1,672</td><td>−$150</td><td><strong>$1,522 / month</strong></td></tr>
+          <tr><td><strong>2 Person</strong></td><td>$76,416</td><td>$6,368</td><td>$1,910</td><td>−$150</td><td><strong>$1,760 / month</strong></td></tr>
+          <tr><td><strong>3 Person</strong></td><td>$85,968</td><td>$7,164</td><td>$2,149</td><td>−$150</td><td><strong>$1,999 / month</strong></td></tr>
+          <tr><td><strong>4 Person</strong></td><td>$95,520</td><td>$7,960</td><td>$2,388</td><td>−$150</td><td><strong>$2,238 / month</strong></td></tr>
         </table>
       </div>
-      <p class="source-note">Source: HUD SAFMR datasets FY2021–FY2025. HUD Area: Philadelphia-Camden-Wilmington, PA-NJ-DE-MD MSA. ZIP: 19072.</p>
-      <div class="insight-box"><strong>The rate spike effect:</strong> The sharpest jump — +18.5% in a single year for 1BRs — happened between FY2023 and FY2024, corresponding to 2022–2023 when the Federal Reserve aggressively raised interest rates. Would-be homebuyers who couldn't afford mortgages at 7%+ flooded the rental market, pushing rents up sharply across the Main Line.</div>
-    </section>
+    </div>
 
-    <hr class="section-divider">
+    <!-- STUDIOS & 1BR -->
+    <div class="section">
+      <h2 class="section-title">Part 2 — Studios &amp; 1-Bedrooms</h2>
+      <p>For <strong>single earners</strong> (max $1,522/mo) and <strong>2-person households</strong> (max $1,760/mo).</p>
 
-    <section id="mainline">
-      <div class="section-header">
-        <div class="section-title">🗺️ Main Line Comparison — Zillow ZORI Monthly Data</div>
-        <div class="section-sub">Zillow's Observed Rent Index (ZORI) tracks actual asking rents monthly by zip. Narberth's 19072 only has one data point due to its small size, but neighboring zips on the same SEPTA Paoli/Thorndale line have full monthly series from 2023–2026.</div>
-      </div>
-      <div class="comp-grid" style="margin-bottom:1.5rem;">
-        <div class="comp-card"><div class="comp-zip">19072</div><div class="comp-town">Narberth</div><div class="comp-price">$3,575</div><div class="comp-change neutral">Feb 2026 (only data point)</div></div>
-        <div class="comp-card"><div class="comp-zip">19010</div><div class="comp-town">Bryn Mawr</div><div class="comp-price">$2,686</div><div class="comp-change up">▲ +8.3% YoY</div></div>
-        <div class="comp-card"><div class="comp-zip">19096</div><div class="comp-town">Wynnewood</div><div class="comp-price">$2,315</div><div class="comp-change neutral">≈ flat YoY</div></div>
-        <div class="comp-card"><div class="comp-zip">19003</div><div class="comp-town">Ardmore</div><div class="comp-price">$2,375</div><div class="comp-change up">▲ +9.9% YoY</div></div>
-        <div class="comp-card"><div class="comp-zip">19083</div><div class="comp-town">Havertown</div><div class="comp-price">$1,765</div><div class="comp-change up">▲ +1.6% YoY</div></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Zillow ZORI Monthly Asking Rents — Main Line Zip Codes (Jan 2023 – Feb 2026)</div>
-        <div class="chart-wrap-lg"><canvas id="mainlineChart"></canvas></div>
-      </div>
-      <div class="two-col">
-        <div class="chart-card"><div class="chart-title">Feb 2026 Snapshot — All-Zip Comparison ($)</div><div class="chart-wrap-sm"><canvas id="snapCompChart"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">2-Year Rent Change % — Each Zip (Jan 2024 → Feb 2026)</div><div class="chart-wrap-sm"><canvas id="changePctChart"></canvas></div></div>
-      </div>
-      <div class="insight-box"><strong>Narberth as outlier:</strong> Narberth's $3,575 ZORI reading sits <strong>$889 above Bryn Mawr</strong> (next most expensive, at $2,686) and more than double Havertown. This premium reflects the borough's walkability, train access, school quality, and small-town character — the very things residents fear density changes will erode.</div>
-    </section>
-
-    <hr class="section-divider">
-
-    <section id="affordability">
-      <div class="section-header">
-        <div class="section-title">💰 Affordability Analysis</div>
-        <div class="section-sub">How much income do you need to comfortably afford a rental in Narberth — and how does that stack up against what people actually earn in Montgomery County?</div>
-      </div>
-      <div class="two-col">
-        <div class="chart-card"><div class="chart-title">Annual Income Required to Afford Each Unit Type (30% Rule)</div><div class="chart-wrap-sm"><canvas id="affordChart"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">HUD FMR Annual Growth Rate by Bedroom (Year-over-Year %)</div><div class="chart-wrap-sm"><canvas id="growthChart"></canvas></div></div>
-      </div>
-      <div class="table-card" style="margin-top:1rem;">
-        <table>
-          <thead><tr><th>Unit Type</th><th>HUD FMR (FY2025)</th><th>Annual Rent Cost</th><th>Income Required (30% rule)</th><th>vs. Montco Median (~$94,600)</th><th>Affordability Rating</th></tr></thead>
-          <tbody>
-            <tr><td>Studio (0BR)</td><td>$1,800/mo</td><td>$21,600/yr</td><td>$72,000/yr</td><td>76% of median — just within reach</td><td><span class="badge badge-amber">Moderate strain</span></td></tr>
-            <tr><td>1 Bedroom</td><td>$1,980/mo</td><td>$23,760/yr</td><td>$79,200/yr</td><td>84% of median — tight</td><td><span class="badge badge-red">Difficult for many</span></td></tr>
-            <tr><td>2 Bedroom</td><td>$2,360/mo</td><td>$28,320/yr</td><td>$94,400/yr</td><td>≈ 100% of median — requires full median HHI</td><td><span class="badge badge-red">Unaffordable for most</span></td></tr>
-            <tr><td>3 Bedroom</td><td>$2,840/mo</td><td>$34,080/yr</td><td>$113,600/yr</td><td>120% of median</td><td><span class="badge badge-red">Luxury tier</span></td></tr>
-            <tr><td>All-homes (Zillow)</td><td>$3,575/mo</td><td>$42,900/yr</td><td>$143,000/yr</td><td>151% of median</td><td><span class="badge badge-red">Extreme luxury</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="source-note">Montgomery County PA Median Household Income: ~$94,600 (ACS 2023 5-year estimates). 30% rule = standard housing cost burden threshold.</p>
-      <div class="warning-box"><strong>The "affordable units in luxury buildings" problem:</strong> The council's proposed density bonuses would allow taller buildings in exchange for setting aside some units at below-market rates. But even at HUD's 40th-percentile benchmarks, a 2-bedroom already costs what the median household earns in full. "Affordable" set-asides in otherwise market-rate buildings typically target 60–80% AMI — those units are fewer in number and do little to reduce the overall market-rate pressure that drives Narberth's premium.</div>
-    </section>
-
-    <hr class="section-divider">
-
-    <section id="trend">
-      <div class="section-header">
-        <div class="section-title">📈 Trend Analysis — Direction of Travel</div>
-        <div class="section-sub">Synthesizing HUD's annual data with Zillow's monthly ZORI for proxy markets to understand where Narberth rents have been and where they're heading.</div>
-      </div>
-      <div class="chart-card"><div class="chart-title">All Bedroom Types — HUD FMR Annual Trend (FY2021–FY2025)</div><div class="chart-wrap"><canvas id="hudLineChart"></canvas></div></div>
-      <div class="two-col">
-        <div class="chart-card"><div class="chart-title">Bryn Mawr (19010) Monthly ZORI — Best Long-Run Proxy for Narberth</div><div class="chart-wrap-sm"><canvas id="brynMawrChart"></canvas></div></div>
-        <div class="chart-card"><div class="chart-title">Ardmore (19003) Monthly ZORI — Slightly More Affordable Adjacent Market</div><div class="chart-wrap-sm"><canvas id="ardmoreChart"></canvas></div></div>
-      </div>
-      <div class="table-card" style="margin-top:1rem;">
-        <table>
-          <thead><tr><th>Period</th><th>Macro Driver</th><th>Narberth / Main Line Impact</th><th>HUD 1BR Change</th></tr></thead>
-          <tbody>
-            <tr><td><strong>FY2021 → FY2022</strong></td><td>Post-COVID suburban migration; low rates still in effect</td><td><span class="badge badge-green">Mild increase</span></td><td>+$30 (+2.2%)</td></tr>
-            <tr><td><strong>FY2022 → FY2023</strong></td><td>Fed begins rate hikes; buyers exit market; renters surge</td><td><span class="badge badge-amber">Accelerating</span></td><td>+$190 (+13.8%)</td></tr>
-            <tr><td><strong>FY2023 → FY2024</strong></td><td>Rates peak 7%+; buyer lockout intensifies; suburban rental demand peaks</td><td><span class="badge badge-red">Steepest spike</span></td><td>+$290 (+18.5%)</td></tr>
-            <tr><td><strong>FY2024 → FY2025</strong></td><td>Rate plateau; some demand moderation; supply still tight</td><td><span class="badge badge-amber">Slowing but elevated</span></td><td>+$120 (+6.5%)</td></tr>
-            <tr><td><strong>2025 → 2026 (projected)</strong></td><td>Rates declining; some buyer return; council zoning push; 230 Haverford construction</td><td><span class="badge badge-blue">Continued pressure; new supply years away</span></td><td>Est. +4–7%</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <hr class="section-divider">
-
-    <section id="context">
-      <div class="section-header">
-        <div class="section-title">⚖️ What the Data Says About the Zoning Push</div>
-        <div class="section-sub">Connecting the rental data to the borough council's proposed May 2026 zoning changes — what the numbers support, and what they don't.</div>
-      </div>
-      <div class="chart-card"><div class="chart-title">The Affordability Gap — Actual 1BR FMR vs. What "Affordable Housing" Needs to Cost (80% AMI Target ≈ $1,258/mo)</div><div class="chart-wrap"><canvas id="gapChart"></canvas></div></div>
-      <div class="two-col" style="margin-top:1.5rem;">
-        <div>
-          <h3 style="font-size:0.95rem;font-weight:800;color:var(--green);margin-bottom:0.85rem;">✅ What the data supports</h3>
-          <ul style="font-size:0.875rem;color:var(--gray-700);padding-left:1.25rem;line-height:2.1;">
-            <li>Narberth has genuinely become very expensive since 2021</li>
-            <li>4-year HUD FMR increases of 40–54% across all bedroom types</li>
-            <li>Affordability is a real and documented problem for lower-income households</li>
-            <li>Main Line rents broadly rising — Narberth isn't unique in direction, just magnitude</li>
-            <li>There is genuine market demand for rental housing near the train station</li>
-          </ul>
-        </div>
-        <div>
-          <h3 style="font-size:0.95rem;font-weight:800;color:var(--red);margin-bottom:0.85rem;">🚩 What the data doesn't support</h3>
-          <ul style="font-size:0.875rem;color:var(--gray-700);padding-left:1.25rem;line-height:2.1;">
-            <li>That Narberth's rezoning will meaningfully lower market rents</li>
-            <li>That the crisis is caused by local supply restrictions (vs. macro rate environment)</li>
-            <li>That density bonuses produce durable, deep affordability at scale</li>
-            <li>That adding 25-unit buildings moves the needle on the $3,575 ZORI figure</li>
-            <li>That resident concerns about character/parking/infrastructure are irrelevant</li>
-          </ul>
+      <div class="listing-group">
+        <div class="listing-group-title">📋 Studio Apartments — Narberth, PA 19072</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th>Property / Address</th>
+              <th>Rent</th>
+              <th>Details</th>
+              <th>Source</th>
+              <th>1 Person (&lt;$1,522)</th>
+              <th>2 Person (&lt;$1,760)</th>
+            </tr>
+            <tr>
+              <td><strong>Montgomery Court</strong><br>214 Price Ave<br><a href="https://www.apartments.com/montgomery-court-narberth-pa/yfqzz3r/" target="_blank">Apartments.com →</a></td>
+              <td>$1,190–$1,415</td>
+              <td>421 sq ft</td>
+              <td>Apartments.com</td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>203 N Essex Ave, Apt 22</strong><br>Narberth, PA 19072<br><a href="https://www.zillow.com/homedetails/203-N-Essex-Ave-APT-22-Narberth-PA-19072/2092683735_zpid/" target="_blank">Zillow →</a></td>
+              <td>$1,440</td>
+              <td>Studio / 1 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>The Elm</strong><br>114 Forrest Ave<br><a href="https://www.zillow.com/apartments/narberth-pa/the-elm/CmGMLv/" target="_blank">Zillow →</a> · <a href="https://www.realtor.com/rentals/details/114-Forrest-Ave_Narberth_PA_19072_M92406-12664?from=srp-list-card" target="_blank">Realtor →</a></td>
+              <td>$2,195+</td>
+              <td>666 sq ft</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
         </div>
       </div>
-      <div class="insight-box" style="margin-top:1.25rem;"><strong>The core argument for residents, in data terms:</strong> The steepest rent jump (+18.5% in one year) happened because the Fed raised interest rates, trapping would-be buyers in the rental market. That's a national macro phenomenon — not a failure of Narberth's zoning code. As rates moderate, some of that demand pressure will ease naturally. The council's proposed fix (density bonuses for luxury buildings) addresses a symptom with a tool designed for a different problem.</div>
-    </section>
 
-    <hr class="section-divider">
-
-    <section id="data-notes">
-      <div class="section-header">
-        <div class="section-title">🔬 Data Sources &amp; Methodology Notes</div>
-        <div class="section-sub">Transparency about what this data is, where it comes from, and its limitations.</div>
+      <div class="listing-group">
+        <div class="listing-group-title">📋 1-Bedroom Apartments — Narberth, PA 19072</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th>Property / Address</th>
+              <th>Rent</th>
+              <th>Details</th>
+              <th>Source</th>
+              <th>1 Person (&lt;$1,522)</th>
+              <th>2 Person (&lt;$1,760)</th>
+            </tr>
+            <tr>
+              <td><strong>Montgomery Court — 1BR</strong><br>214 Price Ave<br><a href="https://www.apartments.com/montgomery-court-narberth-pa/yfqzz3r/" target="_blank">Apartments.com →</a></td>
+              <td>$1,390–$1,735</td>
+              <td>608–660 sq ft</td>
+              <td>Apartments.com</td>
+              <td><span class="badge badge-partial">◑ Some units</span><br><small>(units ≤$1,522)</small></td>
+              <td><span class="badge badge-partial">◑ Most units</span><br><small>(units ≤$1,760)</small></td>
+            </tr>
+            <tr>
+              <td><strong>426 N Essex Ave — Unit 1L</strong><br>Narberth, PA 19072<br><a href="https://www.zillow.com/homedetails/426-N-Essex-Ave-APT-1L-Narberth-PA-19072/2068005380_zpid/" target="_blank">Zillow →</a></td>
+              <td>$1,500</td>
+              <td>1 bd / 1 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>426 N Essex Ave — Unit 2L</strong><br>Narberth, PA 19072<br><a href="https://www.zillow.com/homedetails/426-N-Essex-Ave-APT-2L-Narberth-PA-19072/2070307961_zpid/" target="_blank">Zillow →</a></td>
+              <td>$1,600</td>
+              <td>1 bd / 1 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>243 Haverford Ave, Apt 2</strong><br>Narberth, PA 19072<br><a href="https://www.realtor.com/rentals/details/243-Haverford-Ave-Apt-2_Narberth_PA_19072_M95865-89392?from=srp-list-card" target="_blank">Realtor.com →</a></td>
+              <td>$1,700</td>
+              <td>1 bd / 1 ba, 1,250 sq ft</td>
+              <td>Realtor.com</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>Metropolitan Narberth Hall — 1BR</strong><br>300 N Essex Ave<br><a href="https://www.zillow.com/apartments/narberth-pa/metropolitan-narberth-hall/5XjKXD/" target="_blank">Zillow →</a> · <a href="https://www.realtor.com/rentals/details/300-N-Essex-Ave_Narberth_PA_19072_M37294-39377?from=srp-list-card" target="_blank">Realtor →</a></td>
+              <td>$1,735+</td>
+              <td>1 bd / 1 ba</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>203 N Essex Ave, Apt 18</strong><br><a href="https://www.zillow.com/homedetails/203-N-Essex-Ave-APT-18-Narberth-PA-19072/2085645985_zpid/" target="_blank">Zillow →</a></td>
+              <td>$2,085</td>
+              <td>1 bd / 1 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>258 Haverford Ave</strong><br><a href="https://www.realtor.com/rentals/details/258-Haverford-Ave_Narberth_PA_19072_M96490-18408?from=srp-list-card" target="_blank">Realtor.com →</a></td>
+              <td>$2,195</td>
+              <td>1 bd / 1 ba</td>
+              <td>Realtor.com</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>1334 Montgomery Ave, Apt D4</strong><br><a href="https://www.zillow.com/homedetails/1334-Montgomery-Ave-APT-D4-Narberth-PA-19072/9864665_zpid/" target="_blank">Zillow →</a></td>
+              <td>$2,500</td>
+              <td>1 bd / 1 ba, 633 sq ft</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>203 Haverford Ave — 1BR</strong><br><a href="https://www.zillow.com/b/203-haverford-ave-narberth-pa-98tZXZ/" target="_blank">Zillow →</a></td>
+              <td>$2,945+</td>
+              <td>1 bd / 1 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Metropolitan Narberth Square — 1BR</strong><br>650 Montgomery Ave<br><a href="https://www.zillow.com/apartments/narberth-pa/metropolitan-narberth-square/CnNyhV/" target="_blank">Zillow →</a></td>
+              <td>$3,085+</td>
+              <td>1 bd / 1 ba, 758 sq ft</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <div class="three-col">
-        <div class="chart-card"><div class="chart-title">📂 HUD Small Area FMRs</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Published annually by the U.S. Department of Housing and Urban Development. Represent the 40th percentile of asking rents for standard-quality units in the Philadelphia-Camden-Wilmington MSA, filtered by ZIP code. Free public download. Fiscal years run Oct 1 – Sep 30.</p><p class="source-note">huduser.gov → Small Area Fair Market Rents</p></div>
-        <div class="chart-card"><div class="chart-title">📂 Zillow ZORI</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Zillow's Observed Rent Index tracks monthly asking rents across all home types. ZIP-level data for 19072 has only one data point (Feb 2026: $3,575) due to the small sample size. Neighboring ZIP data provides full monthly series back to Jan 2023.</p><p class="source-note">files.zillowstatic.com → Zip_zori_uc_sfrcondomfr_sm_month.csv</p></div>
-        <div class="chart-card"><div class="chart-title">⚠️ What's Missing</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Individual listing history from Zillow, Apartments.com, or Realtor.com is not publicly available — those platforms block scraping and require paid API access. This report reflects aggregate index data, not unit-level listings.</p><p class="source-note">Limitation: no historical per-listing data for 19072</p></div>
+
+      <div class="summary-box">
+        <h3>📊 Summary: Singles &amp; 2-Person Households</h3>
+        <ul>
+          <li><strong>Single earners (&lt;$1,522/mo rent):</strong> ~4–5 units — Montgomery Court Studios ($1,190–$1,415), 203 N Essex Apt 22 ($1,440), 426 N Essex Unit 1L ($1,500), and lower-priced Montgomery Court 1BR units. <em>Note: 426 N Essex Unit 2L ($1,600) no longer qualifies once utilities are factored in.</em></li>
+          <li><strong>2-person households (&lt;$1,760/mo rent):</strong> ~7–9 units — all of above plus 426 N Essex Unit 2L ($1,600), 243 Haverford Apt 2 ($1,700), Metropolitan Narberth Hall 1BR ($1,735+), and Montgomery Court 1BR units up to $1,760</li>
+        </ul>
       </div>
-      <div class="data-note-box"><strong>Note on HUD vs. Market Rents:</strong> HUD FMRs are set at the 40th percentile of a broad metro area and are used to calibrate housing vouchers. Actual asking rents in Narberth proper run significantly higher, as evidenced by the Zillow ZORI figure of $3,575. The gap between HUD's $1,980 1BR benchmark and Zillow's $3,575 all-homes index reflects just how far Narberth's market has moved beyond what even the regional average considers normal.</div>
-    </section>
+    </div>
 
-  </main>
+    <!-- 2BR & 3BR NARBERTH -->
+    <div class="section">
+      <h2 class="section-title">Part 3 — 2-Bedrooms &amp; 3-Bedrooms</h2>
+      <p>For <strong>3-person households</strong> (max $1,999/mo) and <strong>4-person households</strong> (max $2,238/mo).</p>
 
-  <footer class="page-footer">
-    <strong>Data Sources:</strong> Zillow Research (ZORI public CSV) &nbsp;·&nbsp; HUD SAFMR FY2021–FY2025 (huduser.gov) &nbsp;·&nbsp; U.S. Census Bureau ACS 2023<br>
-    Report compiled March 2026 &nbsp;·&nbsp; For informational / research purposes only &nbsp;·&nbsp; Not investment or legal advice
-  </footer>
+      <div class="listing-group">
+        <div class="listing-group-title">📋 2-Bedroom Apartments — Narberth, PA 19072</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th>Property / Address</th>
+              <th>Rent</th>
+              <th>Details</th>
+              <th>Source</th>
+              <th>3 Person (&lt;$1,999)</th>
+              <th>4 Person (&lt;$2,238)</th>
+            </tr>
+            <tr>
+              <td><strong>Montgomery Court — 2BR</strong><br>214 Price Ave<br><a href="https://www.apartments.com/montgomery-court-narberth-pa/yfqzz3r/" target="_blank">Apartments.com →</a></td>
+              <td>$1,625–$1,875</td>
+              <td>2 bd / 1 ba, 768–847 sq ft</td>
+              <td>Apartments.com</td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>111 Chestnut Ave</strong><br><a href="https://www.zillow.com/b/111-chestnut-ave-narberth-pa-5XgH6b/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/111-chestnut-ave-narberth-pa/c1s3e34/" target="_blank">Apts →</a></td>
+              <td>$2,100</td>
+              <td>2 bd / 1 ba, 1,340 sq ft</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span><br><small>(over by $101)</small></td>
+              <td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>Metropolitan Narberth Hall — 2BR</strong><br>300 N Essex Ave<br><a href="https://www.zillow.com/apartments/narberth-pa/metropolitan-narberth-hall/5XjKXD/" target="_blank">Zillow →</a> · <a href="https://www.realtor.com/rentals/details/300-N-Essex-Ave_Narberth_PA_19072_M37294-39377?from=srp-list-card" target="_blank">Realtor →</a></td>
+              <td>$2,125–$2,295</td>
+              <td>2 bd / 1 ba</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-yes">✓ YES (at min. rent)</span></td>
+            </tr>
+            <tr>
+              <td><strong>1637 Oakwood Dr, Unit S-105</strong><br><a href="https://www.zillow.com/homedetails/1637-Oakwood-Dr-S-105-Narberth-PA-19072/460372459_zpid/" target="_blank">Zillow →</a></td>
+              <td>$2,400</td>
+              <td>2 bd / 2 ba, 1,144 sq ft</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Metropolitan Narberth Station</strong><br>280 Haverford Ave<br><a href="https://www.realtor.com/rentals/details/280-Haverford-Ave_Narberth_PA_19072_M97496-64585?from=srp-list-card" target="_blank">Realtor.com →</a></td>
+              <td>$2,515</td>
+              <td>2 bd / 1 ba, 985 sq ft</td>
+              <td>Realtor.com</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>203 Haverford Ave — 2BR</strong><br><a href="https://www.zillow.com/b/203-haverford-ave-narberth-pa-98tZXZ/" target="_blank">Zillow →</a></td>
+              <td>$3,375+</td>
+              <td>2 bd / 2 ba</td>
+              <td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Metropolitan Narberth Square — 2BR</strong><br>650 Montgomery Ave<br><a href="https://www.zillow.com/apartments/narberth-pa/metropolitan-narberth-square/CnNyhV/" target="_blank">Zillow →</a></td>
+              <td>$4,065+</td>
+              <td>2 bd / 2 ba, 1,146 sq ft</td>
+              <td>Zillow / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td>
+              <td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-</div><!-- /tab-rentals -->
+      <div class="listing-group">
+        <div class="listing-group-title">📋 3-Bedroom Rentals — Narberth, PA 19072</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th>Property / Address</th><th>Rent</th><th>Details</th><th>Source</th><th>3 Person (&lt;$1,999)</th><th>4 Person (&lt;$2,238)</th>
+            </tr>
+            <tr>
+              <td><strong>342 Dudley Ave</strong><br><a href="https://www.realtor.com/rentals/details/342-Dudley-Ave_Narberth_PA_19072_M49658-08707" target="_blank">Realtor →</a> · <a href="https://www.apartments.com/342-dudley-ave-narberth-pa/vgpprqd/" target="_blank">Apts →</a></td>
+              <td>$2,900</td><td>3 bd / 1.5 ba, 1,160 sq ft</td><td>Realtor.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>248 Iona Ave</strong><br><a href="https://www.apartments.com/248-iona-ave-narberth-pa/e65efcm/" target="_blank">Apts →</a> · <a href="https://www.zillow.com/homedetails/248-Iona-Ave-Narberth-PA-19072/9864489_zpid/" target="_blank">Zillow →</a></td>
+              <td>$3,150</td><td>3 bd / 1.5 ba</td><td>Apartments.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>210 Elmwood Ave, Unit 2</strong><br><a href="https://www.zumper.com/address/210-elmwood-ave-narberth-pa-19072-usa" target="_blank">Zumper →</a></td>
+              <td>$3,200</td><td>3 bd / 2 ba, ~1,500 sq ft</td><td>Zumper</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <h3>📊 Summary: 3-Person &amp; 4-Person Households</h3>
+        <ul>
+          <li><strong>3-person (&lt;$1,999/mo rent):</strong> <strong>Only Montgomery Court 2BR ($1,625–$1,875) qualifies.</strong> 111 Chestnut Ave ($2,100) and Metropolitan Narberth Hall 2BR ($2,125+) no longer qualify once utilities are factored in.</li>
+          <li><strong>4-person (&lt;$2,238/mo rent):</strong> Montgomery Court 2BR ($1,625–$1,875), 111 Chestnut Ave ($2,100), and Metropolitan Narberth Hall 2BR at minimum rent ($2,125) all qualify</li>
+          <li>No 3-bedroom units in Narberth qualify under either threshold — cheapest 3BR is $2,900/mo</li>
+        </ul>
+      </div>
+
+      <div class="callout">
+        <strong>Bottom Line — Narberth:</strong> Even factoring in $150/month utilities, Narberth's existing rental market provides affordable options for singles, couples, and families at 80% AMI. The anchor property, <strong>Montgomery Court (214 Price Ave)</strong>, satisfies the affordability test for every household size — with studios from $1,190, 1BR from $1,390, and 2BR from $1,625, all well within the adjusted thresholds.
+      </div>
+    </div>
+
+  </div><!-- /container narberth -->
+</div><!-- /narberth -->
+
+<!-- ── REPORT 2: ARDMORE ── -->
+<div id="ardmore">
+  <div class="part-header ardmore">
+    <div class="container">
+      <div class="part-num">Report 2 of 2</div>
+      <h2>🏘️ Ardmore's Affordable Housing: A Cautionary Tale</h2>
+      <p>Ardmore has embraced new construction and density incentives. This is what that approach actually produced for affordability — in real numbers, with live listings.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="section">
+      <h2 class="section-title green">Part 2 — Studios &amp; 1-Bedrooms</h2>
+      <p>For <strong>single earners</strong> (max $1,522/mo) and <strong>2-person households</strong> (max $1,760/mo). Same income thresholds — same county.</p>
+
+      <div class="listing-group">
+        <div class="listing-group-title green-bg">📋 Studio Apartments — Ardmore, PA 19003</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th class="green-th2">Property / Address</th><th class="green-th2">Rent</th><th class="green-th2">Details</th><th class="green-th2">Source</th><th class="green-th2">1 Person</th><th class="green-th2">2 Person</th>
+            </tr>
+            <tr>
+              <td><strong>Suburban Court</strong> <span class="tag tag-old">Built 1926</span><br>113 Cricket Ave<br><a href="https://www.apartments.com/suburban-court-apartments-ardmore-pa/mrthx1l/" target="_blank">Apartments.com →</a></td>
+              <td>$1,317–$1,447</td><td>410 sq ft, hardwood</td><td>Apartments.com</td>
+              <td><span class="badge badge-yes">✓ YES</span></td><td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>170 Lakeside Apartments</strong> <span class="tag tag-old">Built 1975</span><br>170 Lakeside Rd<br><a href="https://www.apartments.com/170-lakeside-apartments-ardmore-pa/yv5dfvs/" target="_blank">Apartments.com →</a></td>
+              <td>$1,495</td><td>547 sq ft, in-unit W/D</td><td>Apartments.com</td>
+              <td><span class="badge badge-yes">✓ YES</span></td><td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="listing-group">
+        <div class="listing-group-title green-bg">📋 1-Bedroom Apartments — Ardmore, PA 19003</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th class="green-th2">Property / Address</th><th class="green-th2">Rent</th><th class="green-th2">Details</th><th class="green-th2">Source</th><th class="green-th2">1 Person</th><th class="green-th2">2 Person</th>
+            </tr>
+            <tr>
+              <td><strong>110 Walnut Ave, Unit 3</strong><br><a href="https://www.zillow.com/homedetails/110-Walnut-Ave-Ardmore-PA-19003/9968950_zpid/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/110-walnut-ave-ardmore-pa/pt7c22r/" target="_blank">Apts →</a></td>
+              <td>$1,450</td><td>1 bd / 1 ba</td><td>Zillow</td>
+              <td><span class="badge badge-yes">✓ YES</span></td><td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>Suburban Court — 1BR</strong> <span class="tag tag-old">Built 1926</span><br>113 Cricket Ave<br><a href="https://www.apartments.com/suburban-court-apartments-ardmore-pa/mrthx1l/" target="_blank">Apartments.com →</a></td>
+              <td>$1,497–$1,697</td><td>520–555 sq ft</td><td>Apartments.com</td>
+              <td><span class="badge badge-partial">◑ Some units</span><br><small>(units ≤$1,522)</small></td><td><span class="badge badge-partial">◑ Most units</span><br><small>(units ≤$1,760)</small></td>
+            </tr>
+            <tr>
+              <td><strong>53 Llanfair Rd, Unit E</strong><br><a href="https://www.zillow.com/homedetails/53-Llanfair-Rd-UNIT-E-Ardmore-PA-19003/2104737172_zpid/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/53-llanfair-rd-ardmore-pa-unit-e/b49c669/" target="_blank">Apts →</a></td>
+              <td>$1,600</td><td>1 bd / 1 ba, heat incl.</td><td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ardmore Row</strong><br>2301 Haverford Rd<br><a href="https://www.realtor.com/rentals/details/2301-Haverford-Rd_Ardmore_PA_19003_M91036-34969" target="_blank">Realtor →</a> · <a href="https://www.zillow.com/apartments/ardmore-pa/ardmore-row-apartments/Cm7DCQ/" target="_blank">Zillow →</a></td>
+              <td>$1,625–$1,795</td><td>1 bd, renovated, in-unit W/D</td><td>Realtor / Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-partial">◑ Some units</span><br><small>(units ≤$1,760)</small></td>
+            </tr>
+            <tr>
+              <td><strong>The Athens — 1BR</strong> <span class="tag tag-new">New Construction</span><br>11 E Athens Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/the-athens/5hTyVt/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/the-athens-ardmore-pa/tjqsbr9/" target="_blank">Apts →</a></td>
+              <td>$1,978+</td><td>1 bd, fitness, in-unit W/D</td><td>Zillow / Apts</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Hamlet — 1BR</strong> <span class="tag tag-new">New Construction</span><br>244 E Montgomery Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/hamlet/5XygJB/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/the-hamlet-ardmore-pa/ywhhp4s/" target="_blank">Apts →</a></td>
+              <td>$2,979+</td><td>1 bd, private entry, EV parking</td><td>Zillow / Apts</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>One Ardmore — 1BR</strong> <span class="tag tag-new">New Construction</span><br>24 Cricket Ave<br><a href="https://www.apartments.com/one-ardmore-ardmore-pa/6pce3p1/" target="_blank">Apts →</a> · <a href="https://www.realtor.com/apartments/24-Cricket-Ave_Ardmore_PA_19003/M68196-03318" target="_blank">Realtor →</a></td>
+              <td>$2,778+</td><td>1 bd, 717 sq ft, luxury</td><td>Apts / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Coulter Place — 1BR</strong> <span class="tag tag-new">New Construction</span><br>115 Coulter Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/coulter-place/CqW9MD/" target="_blank">Zillow →</a></td>
+              <td>$3,182+</td><td>1 bd, pool, fitness, luxury</td><td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="summary-box green">
+        <h3>📊 Summary: Singles &amp; 2-Person Households</h3>
+        <ul>
+          <li><strong>Every qualifying affordable unit is in an older, existing building.</strong> Suburban Court (1926) and 170 Lakeside (1975) do the heavy lifting.</li>
+          <li>With utilities factored in, the effective 2-person housing budget is $1,910/mo total — meaning max rent of $1,760. The cheapest new construction 1BR ($1,978 at The Athens) <strong>exceeds even the total 2-person budget before utilities are applied.</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title green">Part 3 — 2-Bedrooms &amp; 3-Bedrooms</h2>
+
+      <div class="listing-group">
+        <div class="listing-group-title green-bg">📋 2-Bedroom Apartments — Ardmore, PA 19003</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th class="green-th2">Property / Address</th><th class="green-th2">Rent</th><th class="green-th2">Details</th><th class="green-th2">Source</th><th class="green-th2">3 Person</th><th class="green-th2">4 Person</th>
+            </tr>
+            <tr>
+              <td><strong>170 Lakeside / 101 Mill Creek</strong> <span class="tag tag-old">Built 1975</span><br>170 Lakeside Rd<br><a href="https://www.apartments.com/170-lakeside-apartments-ardmore-pa/yv5dfvs/" target="_blank">Apartments.com →</a></td>
+              <td>$1,895–$2,310</td><td>2 bd, in-unit W/D, 547–1,127 sq ft</td><td>Apartments.com</td>
+              <td><span class="badge badge-yes">✓ YES (lower units)</span></td><td><span class="badge badge-yes">✓ YES</span></td>
+            </tr>
+            <tr>
+              <td><strong>Hamlet — 2BR</strong> <span class="tag tag-new">New Construction</span><br>244 E Montgomery Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/hamlet/5XygJB/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/the-hamlet-ardmore-pa/ywhhp4s/" target="_blank">Apts →</a></td>
+              <td>$2,196+</td><td>2 bd, private entry, in-unit W/D</td><td>Zillow / Apts</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-yes">✓ YES (at min.)</span></td>
+            </tr>
+            <tr>
+              <td><strong>The Athens — 2BR</strong> <span class="tag tag-new">New Construction</span><br>11 E Athens Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/the-athens/5hTyVt/" target="_blank">Zillow →</a> · <a href="https://www.apartments.com/the-athens-ardmore-pa/tjqsbr9/" target="_blank">Apts →</a></td>
+              <td>$2,307+</td><td>2 bd, 1,121 sq ft, fitness</td><td>Zillow / Apts</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span><br><small>(over by $69)</small></td>
+            </tr>
+            <tr>
+              <td><strong>Montgomery Plaza — 2BR</strong><br>116–120 E Montgomery Ave<br><a href="https://www.apartments.com/ardmore-pa-19003/" target="_blank">Apartments.com →</a></td>
+              <td>$2,796+</td><td>2 bd / 1 ba</td><td>Apartments.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Cricket Flats &amp; Shops — 2BR</strong> <span class="tag tag-new">New Construction</span><br>65 Cricket Ave<br><a href="https://www.realtor.com/apartments/Ardmore_PA/beds-2-2" target="_blank">Realtor.com →</a></td>
+              <td>$3,400–$4,100</td><td>2 bd, 897–1,157 sq ft, luxury</td><td>Realtor.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>The Square — 2BR</strong> <span class="tag tag-new">New Construction</span><br>110 Sibley Ave<br><a href="https://www.apartments.com/ardmore-pa-19003/" target="_blank">Apartments.com →</a></td>
+              <td>$3,389+</td><td>2 bd, luxury high-rise</td><td>Apartments.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>One Ardmore — 2BR</strong> <span class="tag tag-new">New Construction</span><br>24 Cricket Ave<br><a href="https://www.apartments.com/one-ardmore-ardmore-pa/6pce3p1/" target="_blank">Apts →</a> · <a href="https://www.realtor.com/apartments/24-Cricket-Ave_Ardmore_PA_19003/M68196-03318" target="_blank">Realtor →</a></td>
+              <td>$3,965+</td><td>2 bd, 991–1,410 sq ft, luxury</td><td>Apts / Realtor</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Coulter Place — 2BR</strong> <span class="tag tag-new">New Construction</span><br>115 Coulter Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/coulter-place/CqW9MD/" target="_blank">Zillow →</a></td>
+              <td>$4,416+</td><td>2 bd / 2 ba, 1,003–1,300 sq ft</td><td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="listing-group">
+        <div class="listing-group-title green-bg">📋 3-Bedroom Rentals — Ardmore, PA 19003</div>
+        <div class="table-wrap">
+          <table class="listing-table">
+            <tr>
+              <th class="green-th2">Property / Address</th><th class="green-th2">Rent</th><th class="green-th2">Details</th><th class="green-th2">Source</th><th class="green-th2">3 Person</th><th class="green-th2">4 Person</th>
+            </tr>
+            <tr>
+              <td><strong>39 Cricket Ave, Floor 3</strong><br><a href="https://www.zillow.com/homedetails/39-Cricket-Ave-FLOOR-3-Ardmore-PA-19003/2057697047_zpid/" target="_blank">Zillow →</a></td>
+              <td>$2,300</td><td>3 bd / 1 ba, 1,250 sq ft, pet-friendly</td><td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span><br><small>(over by $62)</small></td>
+            </tr>
+            <tr>
+              <td><strong>Hamlet — 3BR</strong> <span class="tag tag-new">New Construction</span><br>244 E Montgomery Ave<br><a href="https://www.apartments.com/the-hamlet-ardmore-pa/ywhhp4s/" target="_blank">Apts →</a></td>
+              <td>$2,396+</td><td>3 bd, in-unit W/D, EV parking</td><td>Apartments.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span><small style="display:block;font-size:10px;opacity:0.7">over by $8</small></td>
+            </tr>
+            <tr>
+              <td><strong>The Square — 3BR</strong> <span class="tag tag-new">New Construction</span><br>110 Sibley Ave<br><a href="https://www.apartments.com/ardmore-pa-19003/" target="_blank">Apts →</a></td>
+              <td>$3,698–$11,300</td><td>3 bd, luxury high-rise</td><td>Apartments.com</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Coulter Place — 3BR</strong> <span class="tag tag-new">New Construction</span><br>115 Coulter Ave<br><a href="https://www.zillow.com/apartments/ardmore-pa/coulter-place/CqW9MD/" target="_blank">Zillow →</a></td>
+              <td>$6,881+</td><td>3 bd, luxury</td><td>Zillow</td>
+              <td><span class="badge badge-no">✗ No</span></td><td><span class="badge badge-no">✗ No</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE KEY INSIGHT -->
+    <div class="section">
+      <h2 class="section-title green">Part 4 — Where Ardmore's Affordable Units Actually Come From</h2>
+
+      <div class="table-wrap">
+        <table>
+          <tr><th class="green-th">Property</th><th class="green-th">Year Built</th><th class="green-th">Affordable Units</th><th class="green-th">Price Range</th></tr>
+          <tr class="highlight-row"><td>Suburban Court, 113 Cricket Ave</td><td><strong>1926</strong></td><td>Studios + 1BR</td><td>$1,317–$1,697/mo</td></tr>
+          <tr class="highlight-row"><td>170 Lakeside / 101 Mill Creek</td><td><strong>1975</strong></td><td>Studios, 1BR, 2BR (lower range)</td><td>$1,495–$2,149/mo</td></tr>
+          <tr class="highlight-row"><td>110 Walnut Ave</td><td>Older stock</td><td>1BR</td><td>$1,450/mo</td></tr>
+          <tr class="highlight-row"><td>53 Llanfair Rd</td><td>Older stock</td><td>1BR</td><td>$1,600/mo</td></tr>
+          <tr class="highlight-row"><td>Ardmore Row (renovated older)</td><td>Renovated</td><td>1BR (lower units)</td><td>$1,625–$1,795/mo</td></tr>
+          <tr class="highlight-row"><td>39 Cricket Ave Floor 3</td><td>Older stock</td><td>3BR</td><td>$2,300/mo</td></tr>
+        </table>
+      </div>
+
+      <h3 class="sub green" style="margin-top:24px;">Where New Construction Landed</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th class="green-th">New Construction Property</th><th class="green-th">Cheapest Unit</th><th class="green-th">Most Expensive Unit</th><th class="green-th">Affordable?</th></tr>
+          <tr class="luxury-row"><td>The Athens</td><td>$1,978/mo 1BR</td><td>$3,412/mo</td><td><span class="badge badge-no">✗ No</span></td></tr>
+          <tr class="luxury-row"><td>Hamlet</td><td>$2,196/mo 2BR</td><td>$3,496/mo 3BR</td><td><span class="badge badge-no">✗ No</span></td></tr>
+          <tr class="luxury-row"><td>One Ardmore</td><td>$2,778/mo 1BR</td><td>$5,066/mo</td><td><span class="badge badge-no">✗ No</span></td></tr>
+          <tr class="luxury-row"><td>Cricket Flats &amp; Shops</td><td>$3,400/mo 2BR</td><td>$4,100/mo</td><td><span class="badge badge-no">✗ No</span></td></tr>
+          <tr class="luxury-row"><td>The Square</td><td>$3,389/mo 2BR</td><td>$11,300/mo 3BR</td><td><span class="badge badge-no">✗ No</span></td></tr>
+          <tr class="luxury-row"><td>Coulter Place</td><td>$3,182/mo 1BR</td><td>$6,881+/mo 3BR</td><td><span class="badge badge-no">✗ No</span></td></tr>
+        </table>
+      </div>
+
+      <div class="callout amber" style="margin-top:20px;">
+        <strong>The Pattern:</strong> Of six major new construction communities in Ardmore, <strong>not a single unit is affordable</strong> for any household size at 80% AMI — even before factoring in utilities. With the $150 utility adjustment, the gap widens further: the 4-person affordable rent cap drops to $2,238, knocking out The Athens 2BR ($2,307) and 39 Cricket Ave 3BR ($2,300) — both of which previously scraped under the wire. Ardmore has more than 5× Narberth's rental inventory, yet its affordable stock comes almost entirely from buildings built between 1926 and 1975.
+      </div>
+    </div>
+
+  </div><!-- /container ardmore -->
+</div><!-- /ardmore -->
+
+<!-- CONCLUSION -->
+<div id="conclusion">
+  <div class="part-header" style="background:#0d1f3c; color:white; padding:50px 20px 45px;">
+    <div class="container">
+      <div class="part-num">Conclusion</div>
+      <h2>The Ardmore Experience Is Narberth's Warning</h2>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section">
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <tr><th>Household Size</th><th>Max Affordable Rent</th><th>Narberth: Units Available</th><th>Ardmore New Construction: Units Available</th></tr>
+          <tr class="highlight-row"><td>1 Person</td><td>$1,522/mo</td><td>~5–6 units</td><td>0 of 6 new communities</td></tr>
+          <tr class="highlight-row"><td>2 Person</td><td>$1,760/mo</td><td>~10–12 units</td><td>0 of 6 new communities</td></tr>
+          <tr class="highlight-row"><td>3 Person</td><td>$1,999/mo</td><td>~5–7 units</td><td>0 of 6 new communities</td></tr>
+          <tr class="highlight-row"><td>4 Person</td><td>$2,238/mo</td><td>~7–10 units</td><td>0 of 6 new communities</td></tr>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Finding 1:</strong> Narberth already has affordable rental housing across all household sizes — even when $150/month in utilities is factored into the affordability calculation. Montgomery Court alone satisfies every household size threshold.
+      </div>
+      <div class="callout green" style="margin-top:12px;">
+        <strong>Finding 2:</strong> Ardmore's new construction produced exclusively luxury units. When utilities are factored in, the tighter rent thresholds eliminate even the few new-construction units that previously margionally qualified. More inventory does not mean more affordable inventory.
+      </div>
+      <div class="callout red" style="margin-top:12px;">
+        <strong>The Risk:</strong> Luxury development raises land values, property taxes, and neighborhood character — threatening the existing older buildings where affordable units actually live. The proposed height bonus could displace the affordable housing Narberth already has.
+      </div>
+      <ul style="padding-left:22px; margin-top:20px; font-size:15px;">
+        <li style="margin-bottom:8px;">Conduct a formal housing needs assessment before enacting zoning changes</li>
+        <li style="margin-bottom:8px;">Engage with existing affordable property owners on long-term affordability preservation</li>
+        <li style="margin-bottom:8px;">Consider targeted incentives (tax abatements, expedited permitting) rather than blanket height bonuses</li>
+        <li style="margin-bottom:8px;">Protect existing affordable stock from displacement driven by new luxury development</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTNOTE -->
+<div class="footnote">
+  <div class="container">
+    <strong>Data &amp; Methodology:</strong> All rental listings sourced from Zillow.com, Apartments.com, Realtor.com, and HotPads.com — accessed March 2026. Listings are subject to change; availability and pricing may have shifted since this report was compiled. Affordability thresholds based on Median Family Income of $119,400 for Montgomery County, PA; 4-person 80% AMI base of $95,520; per-household income limits calculated using standard HUD household-size adjustment factors (70/80/90/100% of 4-person base). Building ages sourced from listing materials and public records. "New Construction" applied to properties identified as newly built in listing materials. This analysis covers active listings only and does not account for subsidized, income-restricted, or Section 8 housing stock.
+  </div>
+</div>
+
+</div><!-- /tab-housing -->
 
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -1052,6 +1581,7 @@ const brynMawr  = [2191,2131,2163,2251,2359,2368,2374,2389,2364,2372,2337,2334,2
 const wynnewood = [2145,2146,2184,2213,2264,2270,2283,2231,2281,2243,2227,2187,2221,2262,2271,2264,2283,2358,2389,2442,2353,2363,2247,2234,2221,2339,2425,2432,2375,2350,2339,2288,2257,2230,2287,2323,2360,2315];
 const ardmore   = [1964,2007,2012,2052,2015,2034,2021,2051,2078,2097,2066,2071,2105,2134,2152,2147,2148,2126,2153,2170,2200,2180,null,2150,2162,2237,2287,2336,2299,2273,2333,2383,2403,2292,2240,2277,2351,2375];
 
+if(document.getElementById('hudBarChart')){
 new Chart(document.getElementById('hudBarChart'), { type:'bar', data:{ labels:['FY2021','FY2022','FY2023','FY2024','FY2025'], datasets:[{label:'Studio (0BR)',data:[1170,1210,1390,1670,1800],backgroundColor:'#bfdbfe',borderColor:'#93c5fd',borderWidth:1},{label:'1 Bedroom',data:[1350,1380,1570,1860,1980],backgroundColor:C.blue,borderColor:'#1d4ed8',borderWidth:1},{label:'2 Bedroom',data:[1640,1670,1890,2230,2360],backgroundColor:C.navy,borderColor:C.navy,borderWidth:1},{label:'3 Bedroom',data:[2040,2060,2300,2700,2840],backgroundColor:C.teal,borderColor:'#0e7490',borderWidth:1}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:false,min:900,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
 new Chart(document.getElementById('mainlineChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Bryn Mawr (19010)',data:brynMawr,borderColor:C.navy,backgroundColor:'rgba(26,47,78,0.07)',tension:0.35,pointRadius:2,fill:false},{label:'Wynnewood (19096)',data:wynnewood,borderColor:C.blue,backgroundColor:'rgba(37,99,235,0.07)',tension:0.35,pointRadius:2,fill:false},{label:'Ardmore (19003)',data:ardmore,borderColor:C.teal,backgroundColor:'rgba(8,145,178,0.07)',tension:0.35,pointRadius:2,fill:false,spanGaps:true}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:{mode:'index',intersect:false}},scales:{x:{ticks:{maxTicksLimit:13,maxRotation:40}},y:{beginAtZero:false,min:1600,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
 new Chart(document.getElementById('snapCompChart'), { type:'bar', data:{ labels:['Narberth 19072','Bryn Mawr 19010','Ardmore 19003','Wynnewood 19096','Havertown 19083'], datasets:[{label:'Latest Asking Rent',data:[3575,2686,2375,2315,1765],backgroundColor:[C.red,C.navy,C.blue,C.teal,C.green]}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,min:1500,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
@@ -1062,6 +1592,7 @@ new Chart(document.getElementById('hudLineChart'), { type:'line', data:{ labels:
 new Chart(document.getElementById('brynMawrChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Bryn Mawr 19010',data:brynMawr,borderColor:C.navy,backgroundColor:'rgba(26,47,78,0.07)',tension:0.3,fill:true,pointRadius:2}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:10,maxRotation:40}},y:{beginAtZero:false,min:2000,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
 new Chart(document.getElementById('ardmoreChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Ardmore 19003',data:ardmore,borderColor:C.teal,backgroundColor:'rgba(8,145,178,0.07)',tension:0.3,fill:true,pointRadius:2,spanGaps:true}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:10,maxRotation:40}},y:{beginAtZero:false,min:1800,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
 new Chart(document.getElementById('gapChart'), { type:'line', data:{ labels:['FY2021','FY2022','FY2023','FY2024','FY2025'], datasets:[{label:'Actual HUD FMR (1BR)',data:[1350,1380,1570,1860,1980],borderColor:C.red,backgroundColor:'rgba(220,38,38,0.07)',fill:true,tension:0.3,pointRadius:6,borderWidth:2.5},{label:'Affordable 1BR at 80% AMI (~$1,258/mo)',data:[1258,1258,1258,1258,1258],borderColor:C.green,borderDash:[8,4],borderWidth:2.5,pointRadius:0,fill:false},{label:'Affordable at 60% AMI (~$944/mo)',data:[944,944,944,944,944],borderColor:'#86efac',borderDash:[4,4],borderWidth:2,pointRadius:0,fill:false}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:{mode:'index',intersect:false}},scales:{y:{beginAtZero:false,min:800,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+}
 
 const T = { rent:{1:1522,2:1760,3:1999,4:2235}, purchase:{1:227000,2:263000,3:298000,4:446000} };
 const forSaleListings = [
