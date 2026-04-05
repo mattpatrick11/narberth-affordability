@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Narberth PA — Housing Research Hub</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* ═══════════ GLOBALS ═══════════ */
+    :root {
+      --navy:      #1a2f4e;
+      --blue:      #2563eb;
+      --blue-light:#3b82f6;
+      --teal:      #0891b2;
+      --green:     #059669;
+      --amber:     #d97706;
+      --red:       #dc2626;
+      --purple:    #7c3aed;
+      --gray-50:   #f9fafb;
+      --gray-100:  #f3f4f6;
+      --gray-200:  #e5e7eb;
+      --gray-400:  #9ca3af;
+      --gray-600:  #4b5563;
+      --gray-700:  #374151;
+      --gray-900:  #111827;
+      --tab-h: 52px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    /* ═══════════ TOP TAB BAR ═══════════ */
+    #tab-bar {
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      background: #0a1a30;
+      display: flex;
+      overflow-x: auto;
+      height: var(--tab-h);
+      border-bottom: 3px solid #1e3a5c;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    #tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.83rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      padding: 0 1.6rem;
+      cursor: pointer;
+      height: 100%;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.06); }
+    .tab-btn.active { color: #fff; border-bottom-color: #60a5fa; }
+
+    /* ═══════════ TAB SECTIONS ═══════════ */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* ═══════════ SHARED HEADER STYLES ═══════════ */
+    .page-header {
+      background: linear-gradient(135deg, #0f2240 0%, #1a3a6e 60%, #0e5a7a 100%);
+      color: white;
+      padding: 3rem 2rem 2.5rem;
+    }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+    .header-eyebrow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
+    .header-badge {
+      display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.25rem 0.8rem; border-radius: 999px;
+    }
+    .header-new {
+      display: inline-block; background: #f59e0b; color: #1a1a1a;
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 999px;
+    }
+    .page-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .page-header h1 span { color: #60a5fa; }
+    .page-header h1 em { font-style: normal; color: #60a5fa; }
+    .page-header p, .page-header .subtitle {
+      font-size: 1rem; color: rgba(255,255,255,0.72); max-width: 660px; line-height: 1.65;
+    }
+    .header-meta {
+      margin-top: 1.5rem; display: flex; gap: 1.75rem; flex-wrap: wrap;
+      font-size: 0.79rem; color: rgba(255,255,255,0.55);
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem;
+    }
+    .header-meta span { display: flex; align-items: center; gap: 0.4rem; }
+    .header-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.75rem; border-radius: 999px;
+    }
+    .tag-research { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+    .tag-housing  { background: #f59e0b; color: #1a1a1a; }
+    .tag-policy   { background: rgba(96,165,250,0.25); color: #93c5fd; }
+
+    /* ═══════════ INNER NAV (offset by tab bar) ═══════════ */
+    .inner-nav {
+      background: white;
+      border-bottom: 2px solid var(--gray-200);
+      position: sticky;
+      top: var(--tab-h);
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .inner-nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; overflow-x: auto;
+    }
+    .inner-nav-inner::-webkit-scrollbar { display: none; }
+    .inner-nav a {
+      padding: 0.9rem 1.2rem; text-decoration: none;
+      font-size: 0.83rem; font-weight: 600; color: var(--gray-600);
+      white-space: nowrap; border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .inner-nav a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+    .inner-nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ═══════════ MAIN CONTENT ═══════════ */
+    .page-main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-main-900 { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+    section { margin-bottom: 3.5rem; scroll-margin-top: calc(var(--tab-h) + 110px); }
+
+    .section-header { margin-bottom: 1.5rem; }
+    .section-title {
+      font-size: 1.4rem; font-weight: 800; color: var(--navy);
+      margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-sub { font-size: 0.875rem; color: var(--gray-600); max-width: 720px; line-height: 1.6; }
+    .section-label {
+      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.5rem;
+    }
+    h2 { font-size: 1.5rem; font-weight: 800; color: var(--navy); margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+    .section-intro { font-size: 0.95rem; color: var(--gray-600); max-width: 760px; line-height: 1.7; margin-bottom: 1.75rem; }
+    hr.divider { border: none; border-top: 2px solid var(--gray-200); margin: 0.5rem 0 2.5rem; }
+    .section-divider { border: none; border-top: 2px solid var(--gray-200); margin: 0.5rem 0 2rem; }
+    p { margin-bottom: 1rem; color: var(--gray-700); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ═══════════ STAT CARDS ═══════════ */
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: white; border-radius: 12px; padding: 1.25rem 1.4rem;
+      border: 1px solid var(--gray-200); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: box-shadow 0.15s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.09); }
+    .stat-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-600); margin-bottom: 0.5rem; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1; letter-spacing: -0.02em; }
+    .stat-change { font-size: 0.79rem; font-weight: 600; margin-top: 0.4rem; }
+    .up   { color: var(--red); }
+    .down { color: var(--green); }
+    .neutral { color: var(--gray-600); }
+
+    /* ═══════════ CHART CARDS ═══════════ */
+    .chart-card {
+      background: white; border-radius: 12px; padding: 1.75rem;
+      border: 1px solid var(--gray-200); box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 1.25rem;
+    }
+    .chart-title { font-size: 0.9rem; font-weight: 700; color: var(--gray-700); margin-bottom: 1.25rem; }
+    .chart-wrap    { position: relative; height: 320px; }
+    .chart-wrap-sm { position: relative; height: 250px; }
+    .chart-wrap-lg { position: relative; height: 380px; }
+
+    /* ═══════════ TABLES ═══════════ */
+    .table-card {
+      background: white; border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--gray-200); box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    thead tr { background: var(--navy); color: white; }
+    thead th { padding: 0.8rem 1.1rem; text-align: left; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.03em; }
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+    tbody tr:hover { background: #eff6ff; }
+    tbody td { padding: 0.72rem 1.1rem; border-bottom: 1px solid var(--gray-100); vertical-align: top; line-height: 1.5; }
+
+    /* ═══════════ BADGES ═══════════ */
+    .badge { display: inline-block; padding: 0.18rem 0.65rem; border-radius: 999px; font-size: 0.73rem; font-weight: 700; }
+    .badge-red    { background: #fef2f2; color: var(--red); }
+    .badge-green  { background: #ecfdf5; color: var(--green); }
+    .badge-blue   { background: #eff6ff; color: var(--blue); }
+    .badge-amber  { background: #fffbeb; color: var(--amber); }
+    .badge-navy   { background: #e8edf4; color: var(--navy); }
+    .badge-grey   { background: #f5f5f5; color: #666; }
+    .badge-orange { background: #fff3e0; color: #e65100; }
+
+    /* ═══════════ GRID LAYOUTS ═══════════ */
+    .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; }
+    @media (max-width: 700px) {
+      .two-col   { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════ CALLOUT / INSIGHT BOXES ═══════════ */
+    .insight-box {
+      background: #eff6ff; border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0;
+      padding: 1rem 1.3rem; margin: 1.1rem 0; font-size: 0.875rem; color: var(--gray-700); line-height: 1.65;
+    }
+    .insight-box strong { color: var(--navy); }
+    .warning-box {
+      background: #fffbeb; border-left: 4px solid var(--amber); border-radius: 0 10px 10px 0;
+      padding: 1rem 1.3rem; margin: 1.1rem 0; font-size: 0.875rem; color: var(--gray-700); line-height: 1.65;
+    }
+    .warning-box strong { color: #92400e; }
+    .data-note-box {
+      background: var(--gray-100); border-left: 4px solid var(--gray-600); border-radius: 0 10px 10px 0;
+      padding: 1rem 1.3rem; margin: 1.1rem 0; font-size: 0.82rem; color: var(--gray-600); line-height: 1.65;
+    }
+    .callout { border-radius: 0 10px 10px 0; padding: 1rem 1.3rem; margin: 1.25rem 0; font-size: 0.88rem; line-height: 1.7; }
+    .callout strong { display: block; margin-bottom: 0.3rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .callout-blue  { background: #eff6ff; border-left: 4px solid var(--blue); }
+    .callout-blue  strong { color: var(--blue); }
+    .callout-amber { background: #fffbeb; border-left: 4px solid var(--amber); }
+    .callout-amber strong { color: #92400e; }
+    .callout-navy  { background: #e8edf4; border-left: 4px solid var(--navy); }
+    .callout-navy  strong { color: var(--navy); }
+
+    /* ═══════════ COMP CARDS ═══════════ */
+    .comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 0.85rem; }
+    .comp-card {
+      background: white; border-radius: 11px; border: 1px solid var(--gray-200);
+      padding: 1.1rem 1rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow 0.15s;
+    }
+    .comp-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.09); }
+    .comp-zip   { font-size: 0.68rem; color: var(--gray-600); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .comp-town  { font-size: 0.95rem; font-weight: 800; color: var(--navy); margin: 0.2rem 0; }
+    .comp-price { font-size: 1.55rem; font-weight: 800; color: var(--blue); margin: 0.2rem 0; letter-spacing: -0.02em; }
+    .comp-change{ font-size: 0.75rem; font-weight: 600; }
+
+    /* ═══════════ IZ RESEARCH PAGE SPECIFIC ═══════════ */
+    .thesis-box {
+      background: var(--navy); color: #fff; border-radius: 14px; padding: 2rem 2.25rem; margin-bottom: 2rem;
+    }
+    .thesis-box .thesis-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #93c5fd; margin-bottom: 0.75rem; }
+    .thesis-box blockquote { font-size: 1.05rem; font-style: italic; color: rgba(255,255,255,0.9); border-left: 3px solid #60a5fa; padding-left: 1rem; line-height: 1.7; }
+    .thesis-box .thesis-note { margin-top: 1rem; font-size: 0.82rem; color: rgba(255,255,255,0.55); }
+
+    .verdict { display: flex; align-items: flex-start; gap: 1rem; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+    .verdict-icon { font-size: 1.75rem; flex-shrink: 0; line-height: 1; }
+    .verdict-title { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .verdict-text  { font-size: 0.9rem; line-height: 1.65; }
+    .verdict-supports  { background: #fef2f2; border-left: 4px solid var(--red); }
+    .verdict-supports  .verdict-title { color: var(--red); }
+    .verdict-counters  { background: #ecfdf5; border-left: 4px solid var(--green); }
+    .verdict-counters  .verdict-title { color: var(--green); }
+    .verdict-mixed     { background: #fffbeb; border-left: 4px solid var(--amber); }
+    .verdict-mixed     .verdict-title { color: var(--amber); }
+
+    .research-card {
+      background: #fff; border: 1px solid var(--gray-200); border-radius: 14px; overflow: hidden;
+      margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.15s;
+    }
+    .research-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+    .card-header { padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--gray-100); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card-stance {
+      display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; font-weight: 800;
+      letter-spacing: 0.07em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 999px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .stance-supports { background: #fef2f2; color: var(--red); }
+    .stance-counters { background: #ecfdf5; color: var(--green); }
+    .stance-mixed    { background: #fffbeb; color: var(--amber); }
+    .card-title { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: 0.3rem; line-height: 1.3; }
+    .card-meta { font-size: 0.78rem; color: var(--gray-600); display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; margin-top: 0.15rem; }
+    .card-meta span { display: flex; align-items: center; gap: 0.25rem; }
+    .card-body { padding: 1.25rem 1.5rem; }
+    .card-body h4 { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray-600); margin: 1rem 0 0.4rem; }
+    .card-body h4:first-child { margin-top: 0; }
+    .card-body p { font-size: 0.9rem; margin-bottom: 0.6rem; }
+    .card-body ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
+    .card-body li { font-size: 0.9rem; margin-bottom: 0.35rem; color: var(--gray-700); }
+    .quote-pull {
+      background: var(--gray-50); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1.1rem; margin: 0.75rem 0; font-size: 0.88rem; font-style: italic;
+      color: var(--gray-700); line-height: 1.65;
+    }
+    .quote-pull.red    { border-left-color: var(--red); }
+    .quote-pull.green  { border-left-color: var(--green); }
+    .quote-pull.amber  { border-left-color: var(--amber); }
+    .card-footer {
+      background: var(--gray-50); border-top: 1px solid var(--gray-100); padding: 0.75rem 1.5rem;
+      font-size: 0.77rem; color: var(--gray-600); display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: center;
+    }
+    .card-footer a { color: var(--blue); text-decoration: none; }
+    .card-footer a:hover { text-decoration: underline; }
+
+    .mechanism { background: #fff; border: 2px solid var(--navy); border-radius: 14px; padding: 1.75rem; margin-bottom: 2rem; }
+    .mechanism h3 { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--navy); margin-bottom: 1rem; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .flow-step { background: var(--navy); color: #fff; border-radius: 8px; padding: 0.5rem 0.9rem; font-size: 0.82rem; font-weight: 600; line-height: 1.35; }
+    .flow-arrow { font-size: 1.1rem; color: var(--gray-400); }
+    .mechanism p { font-size: 0.88rem; color: var(--gray-700); }
+
+    .summary-table-wrap { background: #fff; border: 1px solid var(--gray-200); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+
+    .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.85rem; }
+    .gloss-item { background: #fff; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1rem 1.1rem; }
+    .gloss-term { font-size: 0.9rem; font-weight: 800; color: var(--navy); margin-bottom: 0.3rem; font-family: 'Courier New', monospace; }
+    .gloss-def { font-size: 0.82rem; color: var(--gray-600); line-height: 1.55; }
+
+    /* ═══════════ MAP PAGE SPECIFIC ═══════════ */
+    .map-header { background: #1a3a5c; color: white; padding: 20px 24px; }
+    .map-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .map-header p { font-size: 0.88rem; opacity: 0.8; margin-top: 4px; }
+
+    .ami-bar { background: #2d6a9f; color: white; padding: 12px 24px; font-size: 0.82rem; display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+    .ami-group { display: flex; flex-direction: column; gap: 3px; }
+    .ami-group .title { opacity: 0.75; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+    .ami-group table { border-collapse: collapse; font-size: 0.8rem; }
+    .ami-group td { padding: 2px 10px 2px 0; }
+    .ami-group td:last-child { font-weight: 600; }
+
+    .map-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; padding: 18px 20px 8px; max-width: 1200px; margin: 0 auto; }
+    .map-stat-card { background: white; border-radius: 10px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); text-align: center; }
+    .map-stat-card .value { font-size: 1.7rem; font-weight: 700; color: #1a3a5c; }
+    .map-stat-card .value.green { color: #2e7d32; }
+    .map-stat-card .value.red { color: #c62828; }
+    .map-stat-card .label { font-size: 0.72rem; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+    .breakdown-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .breakdown-card { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .breakdown-card h4 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.4px; color: #555; margin-bottom: 12px; font-weight: 600; }
+    .hh-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.83rem; }
+    .hh-row:last-child { border-bottom: none; }
+    .hh-label { display: flex; align-items: center; gap: 6px; color: #444; }
+    .hh-count { font-weight: 700; font-size: 1rem; color: #2e7d32; }
+    .hh-count.zero { color: #c62828; }
+    .pip { font-size: 12px; line-height: 1; }
+
+    .type-breakdown { max-width: 1200px; margin: 0 auto; padding: 0 20px 12px; }
+    .type-breakdown h3 { font-size: 0.82rem; color: #555; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .type-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .type-tag { background: #e8f0fe; border-radius: 20px; padding: 4px 11px; font-size: 0.78rem; color: #1a3a5c; }
+    .type-tag.has-affordable { background: #e8f5e9; color: #2e7d32; }
+
+    .legend-bar { max-width: 1200px; margin: 0 auto; padding: 0 20px 10px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.79rem; color: #555; align-items: center; }
+    .legend-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+    #map { max-width: 1200px; margin: 0 20px 16px; height: 520px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+
+    .listings-section { max-width: 1200px; margin: 0 auto 30px; padding: 0 20px; }
+    .section-title-map { font-size: 1rem; color: #333; margin-bottom: 10px; font-weight: 600; }
+
+    .filter-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+    .filter-btn { background: #e2e8f0; border: none; padding: 5px 13px; border-radius: 20px; font-size: 0.78rem; cursor: pointer; color: #444; }
+    .filter-btn.active { background: #1a3a5c; color: white; }
+    .filter-btn:hover:not(.active) { background: #cbd5e0; }
+
+    .listings-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .listings-table th { background: #1a3a5c; color: white; padding: 9px 10px; text-align: left; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3px; }
+    .listings-table td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .listings-table tr:hover td { background: #f8faff; }
+
+    .afford-badge { display: inline-flex; align-items: center; gap: 3px; background: #e8f5e9; border-radius: 10px; padding: 3px 8px; }
+    .afford-badge .check { color: #2e7d32; font-size: 0.7rem; font-weight: 700; margin-right: 2px; }
+    .person-pip { font-size: 12px; line-height: 1; }
+    .person-pip.off { opacity: 0.18; filter: grayscale(1); }
+    .not-affordable { display: inline-flex; align-items: center; gap: 3px; background: #fdecea; border-radius: 10px; padding: 3px 8px; color: #c62828; font-size: 0.7rem; font-weight: 600; }
+
+    .map-note { font-size: 0.7rem; color: #aaa; text-align: center; padding: 0 20px 20px; }
+
+    @media (max-width: 600px) {
+      #map { height: 360px; margin: 0 12px 12px; }
+      .map-stats-grid, .listings-section, .type-breakdown, .legend-bar, .breakdown-section { padding-left: 12px; padding-right: 12px; }
+      .listings-table { font-size: 0.72rem; }
+    }
+
+    /* ═══════════ SOURCE NOTE ═══════════ */
+    .source-note { font-size: 0.73rem; color: var(--gray-600); margin-top: 0.8rem; font-style: italic; }
+
+    /* ═══════════ FOOTER ═══════════ */
+    .page-footer {
+      background: var(--navy); color: rgba(255,255,255,0.45);
+      text-align: center; padding: 1.75rem; font-size: 0.78rem; line-height: 1.8;
+    }
+    .page-footer strong { color: rgba(255,255,255,0.7); }
+    .page-footer a { color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 640px) {
+      .card-header { flex-direction: column; }
+      .flow { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ TOP TAB BAR ══════════════════════ -->
+<div id="tab-bar">
+  <button class="tab-btn active" onclick="showTab('rentals', this)">📊 Rental Market Analysis</button>
+  <button class="tab-btn" onclick="showTab('iz', this)">⚖️ Density &amp; Zoning Research</button>
+  <button class="tab-btn" onclick="showTab('map', this)">🗺️ Property Map</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 1 — RENTAL MARKET ANALYSIS
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-rentals" class="tab-section active">
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="header-eyebrow">
+        <span class="header-badge">🏘️ Exploratory Research</span>
+        <span class="header-new">2025 Report</span>
+      </div>
+      <h1>Narberth, PA — <span>Rental Market</span> Analysis</h1>
+      <p>Historical rent trends, affordability benchmarks, and Main Line comparisons for zip code 19072. Built from publicly available HUD and Zillow data through early 2026.</p>
+      <div class="header-meta">
+        <span>📍 Narberth Borough &nbsp;·&nbsp; Montgomery County, PA &nbsp;·&nbsp; ZIP 19072</span>
+        <span>📅 Data through February 2026</span>
+        <span>📂 HUD SAFMR (FY2021–2025) &nbsp;+&nbsp; Zillow ZORI</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="inner-nav">
+    <div class="inner-nav-inner">
+      <a href="#overview">📊 Overview</a>
+      <a href="#hud-history">📋 HUD History</a>
+      <a href="#mainline">🗺️ Main Line Comps</a>
+      <a href="#affordability">💰 Affordability</a>
+      <a href="#trend">📈 Trends</a>
+      <a href="#context">⚖️ Policy Context</a>
+      <a href="#data-notes">🔬 Data Notes</a>
+    </div>
+  </nav>
+
+  <main class="page-main">
+
+    <section id="overview">
+      <div class="section-header">
+        <div class="section-title">📊 Snapshot: Narberth Rental Market</div>
+        <div class="section-sub">The headline numbers as of early 2026 — combining official HUD benchmarks with Zillow's observed rent index. Note: Narberth's small size means limited granular data exists; where 19072-specific data is sparse, neighboring Main Line zips serve as proxies.</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Zillow ZORI — All Homes (19072)</div><div class="stat-value">$3,575</div><div class="stat-change neutral">Feb 2026 — only available ZORI data point for this zip</div></div>
+        <div class="stat-card"><div class="stat-label">HUD FMR — Studio / 0BR (FY2025)</div><div class="stat-value">$1,800</div><div class="stat-change up">▲ +7.8% vs FY2024</div></div>
+        <div class="stat-card"><div class="stat-label">HUD FMR — 1 Bedroom (FY2025)</div><div class="stat-value">$1,980</div><div class="stat-change up">▲ +6.5% vs FY2024</div></div>
+        <div class="stat-card"><div class="stat-label">HUD FMR — 2 Bedroom (FY2025)</div><div class="stat-value">$2,360</div><div class="stat-change up">▲ +5.8% vs FY2024</div></div>
+        <div class="stat-card"><div class="stat-label">HUD FMR — 3 Bedroom (FY2025)</div><div class="stat-value">$2,840</div><div class="stat-change up">▲ +5.2% vs FY2024</div></div>
+        <div class="stat-card"><div class="stat-label">4-Year Increase (1BR, FY2021→FY2025)</div><div class="stat-value">+47%</div><div class="stat-change up">$1,350 → $1,980 in 4 fiscal years</div></div>
+      </div>
+      <div class="insight-box"><strong>The big picture:</strong> HUD's official 1-bedroom Fair Market Rent for Narberth has risen 47% in just four years. The single Zillow market-rate data point ($3,575 for all home types) sits dramatically above HUD's income-weighted benchmarks — reflecting that actual asking rents for larger or single-family units are in a different league entirely. Narberth has become one of the most expensive rental markets in Montgomery County.</div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="hud-history">
+      <div class="section-header">
+        <div class="section-title">📋 HUD Fair Market Rents — Full History</div>
+        <div class="section-sub">HUD's Small Area Fair Market Rents (SAFMRs) are the most reliable, publicly available, zip-level annual rent benchmarks. They represent the 40th percentile of asking rents in the broader Philadelphia-Camden-Wilmington MSA — a floor, not a ceiling. Five full fiscal years of data for ZIP 19072.</div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">HUD Fair Market Rents by Bedroom Count — Narberth 19072 (FY2021–FY2025)</div>
+        <div class="chart-wrap-lg"><canvas id="hudBarChart"></canvas></div>
+      </div>
+      <div class="table-card" style="margin-top:1.25rem;">
+        <table>
+          <thead><tr><th>Fiscal Year</th><th>Studio (0BR)</th><th>1 Bedroom</th><th>2 Bedroom</th><th>3 Bedroom</th><th>1BR YoY Change</th><th>2BR YoY Change</th></tr></thead>
+          <tbody>
+            <tr><td><strong>FY2021</strong></td><td>$1,170</td><td>$1,350</td><td>$1,640</td><td>$2,040</td><td class="neutral">—</td><td class="neutral">—</td></tr>
+            <tr><td><strong>FY2022</strong></td><td>$1,210</td><td>$1,380</td><td>$1,670</td><td>$2,060</td><td><span class="badge badge-amber">▲ +2.2%</span></td><td><span class="badge badge-amber">▲ +1.8%</span></td></tr>
+            <tr><td><strong>FY2023</strong></td><td>$1,390</td><td>$1,570</td><td>$1,890</td><td>$2,300</td><td><span class="badge badge-red">▲ +13.8%</span></td><td><span class="badge badge-red">▲ +13.2%</span></td></tr>
+            <tr><td><strong>FY2024</strong></td><td>$1,670</td><td>$1,860</td><td>$2,230</td><td>$2,700</td><td><span class="badge badge-red">▲ +18.5%</span></td><td><span class="badge badge-red">▲ +18.0%</span></td></tr>
+            <tr><td><strong>FY2025</strong></td><td>$1,800</td><td>$1,980</td><td>$2,360</td><td>$2,840</td><td><span class="badge badge-amber">▲ +6.5%</span></td><td><span class="badge badge-amber">▲ +5.8%</span></td></tr>
+            <tr style="background:#f0f4ff;font-weight:700;"><td><strong>4-Year Total</strong></td><td>+53.8%</td><td>+46.7%</td><td>+43.9%</td><td>+39.2%</td><td colspan="2" style="color:var(--red);">Steepest jump: FY2023–FY2024</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-note">Source: HUD SAFMR datasets FY2021–FY2025. HUD Area: Philadelphia-Camden-Wilmington, PA-NJ-DE-MD MSA. ZIP: 19072.</p>
+      <div class="insight-box"><strong>The rate spike effect:</strong> The sharpest jump — +18.5% in a single year for 1BRs — happened between FY2023 and FY2024, corresponding to 2022–2023 when the Federal Reserve aggressively raised interest rates. Would-be homebuyers who couldn't afford mortgages at 7%+ flooded the rental market, pushing rents up sharply across the Main Line.</div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="mainline">
+      <div class="section-header">
+        <div class="section-title">🗺️ Main Line Comparison — Zillow ZORI Monthly Data</div>
+        <div class="section-sub">Zillow's Observed Rent Index (ZORI) tracks actual asking rents monthly by zip. Narberth's 19072 only has one data point due to its small size, but neighboring zips on the same SEPTA Paoli/Thorndale line have full monthly series from 2023–2026.</div>
+      </div>
+      <div class="comp-grid" style="margin-bottom:1.5rem;">
+        <div class="comp-card"><div class="comp-zip">19072</div><div class="comp-town">Narberth</div><div class="comp-price">$3,575</div><div class="comp-change neutral">Feb 2026 (only data point)</div></div>
+        <div class="comp-card"><div class="comp-zip">19010</div><div class="comp-town">Bryn Mawr</div><div class="comp-price">$2,686</div><div class="comp-change up">▲ +8.3% YoY</div></div>
+        <div class="comp-card"><div class="comp-zip">19096</div><div class="comp-town">Wynnewood</div><div class="comp-price">$2,315</div><div class="comp-change neutral">≈ flat YoY</div></div>
+        <div class="comp-card"><div class="comp-zip">19003</div><div class="comp-town">Ardmore</div><div class="comp-price">$2,375</div><div class="comp-change up">▲ +9.9% YoY</div></div>
+        <div class="comp-card"><div class="comp-zip">19083</div><div class="comp-town">Havertown</div><div class="comp-price">$1,765</div><div class="comp-change up">▲ +1.6% YoY</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Zillow ZORI Monthly Asking Rents — Main Line Zip Codes (Jan 2023 – Feb 2026)</div>
+        <div class="chart-wrap-lg"><canvas id="mainlineChart"></canvas></div>
+      </div>
+      <div class="two-col">
+        <div class="chart-card"><div class="chart-title">Feb 2026 Snapshot — All-Zip Comparison ($)</div><div class="chart-wrap-sm"><canvas id="snapCompChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">2-Year Rent Change % — Each Zip (Jan 2024 → Feb 2026)</div><div class="chart-wrap-sm"><canvas id="changePctChart"></canvas></div></div>
+      </div>
+      <div class="insight-box"><strong>Narberth as outlier:</strong> Narberth's $3,575 ZORI reading sits <strong>$889 above Bryn Mawr</strong> (next most expensive, at $2,686) and more than double Havertown. This premium reflects the borough's walkability, train access, school quality, and small-town character — the very things residents fear density changes will erode.</div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="affordability">
+      <div class="section-header">
+        <div class="section-title">💰 Affordability Analysis</div>
+        <div class="section-sub">How much income do you need to comfortably afford a rental in Narberth — and how does that stack up against what people actually earn in Montgomery County?</div>
+      </div>
+      <div class="two-col">
+        <div class="chart-card"><div class="chart-title">Annual Income Required to Afford Each Unit Type (30% Rule)</div><div class="chart-wrap-sm"><canvas id="affordChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">HUD FMR Annual Growth Rate by Bedroom (Year-over-Year %)</div><div class="chart-wrap-sm"><canvas id="growthChart"></canvas></div></div>
+      </div>
+      <div class="table-card" style="margin-top:1rem;">
+        <table>
+          <thead><tr><th>Unit Type</th><th>HUD FMR (FY2025)</th><th>Annual Rent Cost</th><th>Income Required (30% rule)</th><th>vs. Montco Median (~$94,600)</th><th>Affordability Rating</th></tr></thead>
+          <tbody>
+            <tr><td>Studio (0BR)</td><td>$1,800/mo</td><td>$21,600/yr</td><td>$72,000/yr</td><td>76% of median — just within reach</td><td><span class="badge badge-amber">Moderate strain</span></td></tr>
+            <tr><td>1 Bedroom</td><td>$1,980/mo</td><td>$23,760/yr</td><td>$79,200/yr</td><td>84% of median — tight</td><td><span class="badge badge-red">Difficult for many</span></td></tr>
+            <tr><td>2 Bedroom</td><td>$2,360/mo</td><td>$28,320/yr</td><td>$94,400/yr</td><td>≈ 100% of median — requires full median HHI</td><td><span class="badge badge-red">Unaffordable for most</span></td></tr>
+            <tr><td>3 Bedroom</td><td>$2,840/mo</td><td>$34,080/yr</td><td>$113,600/yr</td><td>120% of median</td><td><span class="badge badge-red">Luxury tier</span></td></tr>
+            <tr><td>All-homes (Zillow)</td><td>$3,575/mo</td><td>$42,900/yr</td><td>$143,000/yr</td><td>151% of median</td><td><span class="badge badge-red">Extreme luxury</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-note">Montgomery County PA Median Household Income: ~$94,600 (ACS 2023 5-year estimates). 30% rule = standard housing cost burden threshold.</p>
+      <div class="warning-box"><strong>The "affordable units in luxury buildings" problem:</strong> The council's proposed density bonuses would allow taller buildings in exchange for setting aside some units at below-market rates. But even at HUD's 40th-percentile benchmarks, a 2-bedroom already costs what the median household earns in full. "Affordable" set-asides in otherwise market-rate buildings typically target 60–80% AMI — those units are fewer in number and do little to reduce the overall market-rate pressure that drives Narberth's premium.</div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="trend">
+      <div class="section-header">
+        <div class="section-title">📈 Trend Analysis — Direction of Travel</div>
+        <div class="section-sub">Synthesizing HUD's annual data with Zillow's monthly ZORI for proxy markets to understand where Narberth rents have been and where they're heading.</div>
+      </div>
+      <div class="chart-card"><div class="chart-title">All Bedroom Types — HUD FMR Annual Trend (FY2021–FY2025)</div><div class="chart-wrap"><canvas id="hudLineChart"></canvas></div></div>
+      <div class="two-col">
+        <div class="chart-card"><div class="chart-title">Bryn Mawr (19010) Monthly ZORI — Best Long-Run Proxy for Narberth</div><div class="chart-wrap-sm"><canvas id="brynMawrChart"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Ardmore (19003) Monthly ZORI — Slightly More Affordable Adjacent Market</div><div class="chart-wrap-sm"><canvas id="ardmoreChart"></canvas></div></div>
+      </div>
+      <div class="table-card" style="margin-top:1rem;">
+        <table>
+          <thead><tr><th>Period</th><th>Macro Driver</th><th>Narberth / Main Line Impact</th><th>HUD 1BR Change</th></tr></thead>
+          <tbody>
+            <tr><td><strong>FY2021 → FY2022</strong></td><td>Post-COVID suburban migration; low rates still in effect</td><td><span class="badge badge-green">Mild increase</span></td><td>+$30 (+2.2%)</td></tr>
+            <tr><td><strong>FY2022 → FY2023</strong></td><td>Fed begins rate hikes; buyers exit market; renters surge</td><td><span class="badge badge-amber">Accelerating</span></td><td>+$190 (+13.8%)</td></tr>
+            <tr><td><strong>FY2023 → FY2024</strong></td><td>Rates peak 7%+; buyer lockout intensifies; suburban rental demand peaks</td><td><span class="badge badge-red">Steepest spike</span></td><td>+$290 (+18.5%)</td></tr>
+            <tr><td><strong>FY2024 → FY2025</strong></td><td>Rate plateau; some demand moderation; supply still tight</td><td><span class="badge badge-amber">Slowing but elevated</span></td><td>+$120 (+6.5%)</td></tr>
+            <tr><td><strong>2025 → 2026 (projected)</strong></td><td>Rates declining; some buyer return; council zoning push; 230 Haverford construction</td><td><span class="badge badge-blue">Continued pressure; new supply years away</span></td><td>Est. +4–7%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="context">
+      <div class="section-header">
+        <div class="section-title">⚖️ What the Data Says About the Zoning Push</div>
+        <div class="section-sub">Connecting the rental data to the borough council's proposed May 2026 zoning changes — what the numbers support, and what they don't.</div>
+      </div>
+      <div class="chart-card"><div class="chart-title">The Affordability Gap — Actual 1BR FMR vs. What "Affordable Housing" Needs to Cost (80% AMI Target ≈ $1,258/mo)</div><div class="chart-wrap"><canvas id="gapChart"></canvas></div></div>
+      <div class="two-col" style="margin-top:1.5rem;">
+        <div>
+          <h3 style="font-size:0.95rem;font-weight:800;color:var(--green);margin-bottom:0.85rem;">✅ What the data supports</h3>
+          <ul style="font-size:0.875rem;color:var(--gray-700);padding-left:1.25rem;line-height:2.1;">
+            <li>Narberth has genuinely become very expensive since 2021</li>
+            <li>4-year HUD FMR increases of 40–54% across all bedroom types</li>
+            <li>Affordability is a real and documented problem for lower-income households</li>
+            <li>Main Line rents broadly rising — Narberth isn't unique in direction, just magnitude</li>
+            <li>There is genuine market demand for rental housing near the train station</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:0.95rem;font-weight:800;color:var(--red);margin-bottom:0.85rem;">🚩 What the data doesn't support</h3>
+          <ul style="font-size:0.875rem;color:var(--gray-700);padding-left:1.25rem;line-height:2.1;">
+            <li>That Narberth's rezoning will meaningfully lower market rents</li>
+            <li>That the crisis is caused by local supply restrictions (vs. macro rate environment)</li>
+            <li>That density bonuses produce durable, deep affordability at scale</li>
+            <li>That adding 25-unit buildings moves the needle on the $3,575 ZORI figure</li>
+            <li>That resident concerns about character/parking/infrastructure are irrelevant</li>
+          </ul>
+        </div>
+      </div>
+      <div class="insight-box" style="margin-top:1.25rem;"><strong>The core argument for residents, in data terms:</strong> The steepest rent jump (+18.5% in one year) happened because the Fed raised interest rates, trapping would-be buyers in the rental market. That's a national macro phenomenon — not a failure of Narberth's zoning code. As rates moderate, some of that demand pressure will ease naturally. The council's proposed fix (density bonuses for luxury buildings) addresses a symptom with a tool designed for a different problem.</div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="data-notes">
+      <div class="section-header">
+        <div class="section-title">🔬 Data Sources &amp; Methodology Notes</div>
+        <div class="section-sub">Transparency about what this data is, where it comes from, and its limitations.</div>
+      </div>
+      <div class="three-col">
+        <div class="chart-card"><div class="chart-title">📂 HUD Small Area FMRs</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Published annually by the U.S. Department of Housing and Urban Development. Represent the 40th percentile of asking rents for standard-quality units in the Philadelphia-Camden-Wilmington MSA, filtered by ZIP code. Free public download. Fiscal years run Oct 1 – Sep 30.</p><p class="source-note">huduser.gov → Small Area Fair Market Rents</p></div>
+        <div class="chart-card"><div class="chart-title">📂 Zillow ZORI</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Zillow's Observed Rent Index tracks monthly asking rents across all home types. ZIP-level data for 19072 has only one data point (Feb 2026: $3,575) due to the small sample size. Neighboring ZIP data provides full monthly series back to Jan 2023.</p><p class="source-note">files.zillowstatic.com → Zip_zori_uc_sfrcondomfr_sm_month.csv</p></div>
+        <div class="chart-card"><div class="chart-title">⚠️ What's Missing</div><p style="font-size:0.84rem;color:var(--gray-700);line-height:1.7;">Individual listing history from Zillow, Apartments.com, or Realtor.com is not publicly available — those platforms block scraping and require paid API access. This report reflects aggregate index data, not unit-level listings.</p><p class="source-note">Limitation: no historical per-listing data for 19072</p></div>
+      </div>
+      <div class="data-note-box"><strong>Note on HUD vs. Market Rents:</strong> HUD FMRs are set at the 40th percentile of a broad metro area and are used to calibrate housing vouchers. Actual asking rents in Narberth proper run significantly higher, as evidenced by the Zillow ZORI figure of $3,575. The gap between HUD's $1,980 1BR benchmark and Zillow's $3,575 all-homes index reflects just how far Narberth's market has moved beyond what even the regional average considers normal.</div>
+    </section>
+
+  </main>
+
+  <footer class="page-footer">
+    <strong>Data Sources:</strong> Zillow Research (ZORI public CSV) &nbsp;·&nbsp; HUD SAFMR FY2021–FY2025 (huduser.gov) &nbsp;·&nbsp; U.S. Census Bureau ACS 2023<br>
+    Report compiled March 2026 &nbsp;·&nbsp; For informational / research purposes only &nbsp;·&nbsp; Not investment or legal advice
+  </footer>
+
+</div><!-- /tab-rentals -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 2 — DENSITY & ZONING RESEARCH
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-iz" class="tab-section">
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="header-tags">
+        <span class="tag tag-research">📚 Research Review</span>
+        <span class="tag tag-housing">Housing Policy</span>
+        <span class="tag tag-policy">Inclusionary Zoning</span>
+      </div>
+      <h1>Do Affordable Units Drive Up <em>Market-Rate Rents</em><br>in the Same Building?</h1>
+      <p class="subtitle">A balanced review of U.S. academic and policy research on whether inclusionary zoning and mixed-income developments cause market-rate tenants to pay a premium — examining evidence on both sides of the debate.</p>
+      <div class="header-meta">
+        <span>📅 Research compiled March 2026</span>
+        <span>🔬 Sources: Mercatus, Pioneer Institute, Urban Institute, HUD, RAND, Harvard, NYU Furman Center</span>
+        <span>⚖️ Both supporting and opposing evidence presented</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="inner-nav">
+    <div class="inner-nav-inner">
+      <a href="#thesis">🎯 The Thesis</a>
+      <a href="#mechanism">⚙️ The Mechanism</a>
+      <a href="#supports">🔴 Supporting Research</a>
+      <a href="#counters">🟢 Counter-Evidence</a>
+      <a href="#supply">🏗️ Supply &amp; Rents</a>
+      <a href="#summary">📊 Summary</a>
+      <a href="#bottom-line">⚖️ Bottom Line</a>
+      <a href="#glossary">📖 Glossary</a>
+    </div>
+  </nav>
+
+  <main class="page-main-900">
+
+    <section id="thesis">
+      <div class="section-label">The Question</div>
+      <h2>The Core Thesis</h2>
+      <hr class="divider">
+      <div class="thesis-box">
+        <div class="thesis-label">Thesis Under Review</div>
+        <blockquote>"When a developer builds a mixed-income apartment building — say, 20 units, with 2 priced at $2,000/mo to meet affordable housing metrics — the landlord will likely increase rents on the other 18 market-rate units to compensate for the revenue lost on the discounted units."</blockquote>
+        <p class="thesis-note">This is known in policy literature as the "cross-subsidy mechanism" of inclusionary zoning (IZ). The question is: how well does the research support it, and what does the evidence on the other side say?</p>
+      </div>
+      <div class="verdict verdict-mixed">
+        <div class="verdict-icon">⚖️</div>
+        <div>
+          <div class="verdict-title">Overall Research Verdict: Supported — With Important Nuance</div>
+          <div class="verdict-text">The cross-subsidy mechanism is <strong>well-documented as standard developer practice</strong> and is <strong>empirically confirmed at the neighborhood/market level</strong> in several peer-reviewed studies. However, the strongest counter-evidence shows that in some contexts, the bigger effect of affordable housing is actually <em>reducing</em> nearby market rents — which would flip the thesis at a neighborhood scale. Both perspectives deserve honest consideration.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mechanism">
+      <div class="section-label">How It Works</div>
+      <h2>The Cross-Subsidy Mechanism Explained</h2>
+      <hr class="divider">
+      <p>Before reviewing the research, here's the economic logic behind your thesis — and why it's considered a real phenomenon in housing economics:</p>
+      <div class="mechanism">
+        <h3>The Developer's Math — Why Market-Rate Rents Must Rise</h3>
+        <div class="flow">
+          <div class="flow-step">Developer builds<br>100-unit building</div><div class="flow-arrow">→</div>
+          <div class="flow-step">10 units set aside<br>at $2,000 (BMR, 10%)</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Market rate for<br>those units: ~$3,000</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Revenue gap:<br>10 × $1,000 = $10,000/mo</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Gap spread across<br>90 market-rate units</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Each market unit<br>priced ~$111/mo higher</div>
+        </div>
+        <p>The per-unit premium (~3.7% on a $3,000 rent) is proportional to the set-aside rate — not the building size. In practice, developers also factor in <strong>opportunity cost of capital</strong>, <strong>financing costs</strong>, and <strong>operating expense allocation</strong> — all of which amplify the cross-subsidy effect as the gap between market and affordable rents widens.</p>
+      </div>
+      <div class="callout callout-amber"><strong>⚠️ Important distinction</strong>Most academic research measures IZ's effect on <em>neighborhood-wide</em> prices, not <em>within-building</em> unit prices specifically. Your thesis is about within-building cross-subsidization — which is confirmed as industry practice but harder to isolate empirically.</div>
+    </section>
+
+    <section id="supports">
+      <div class="section-label">Evidence Supporting the Thesis</div>
+      <h2>Research That Supports the Cross-Subsidy Argument</h2>
+      <hr class="divider">
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">Inclusionary Zoning and Housing Market Outcomes</div><div class="card-meta"><span>👤 Emily Hamilton</span><span>🏛️ Mercatus Center, George Mason University</span><span>📅 2019</span><span>📍 Baltimore–Washington Region</span></div></div><span class="card-stance stance-supports">🔴 Supports thesis</span></div>
+        <div class="card-body">
+          <h4>Key Finding</h4>
+          <div class="quote-pull red">"Mandatory inclusionary zoning is associated with an increase in house prices — approximately 1 percent for each year that the program has been in place."</div>
+          <div class="quote-pull red">"Evidence indicates that inclusionary zoning makes housing less affordable for those not lucky enough to get a subsidized unit."</div>
+          <p>This is peer-reviewed empirical evidence that IZ raises prices market-wide — consistent with the cross-subsidy being passed through to all market-rate renters and buyers, not just those in the same building.</p>
+        </div>
+        <div class="card-footer"><span>📄 Mercatus Center Working Paper</span><a href="https://www.mercatus.org/research/working-papers/inclusionary-zoning-and-housing-market-outcomes" target="_blank" rel="noopener">Full Paper →</a><span>🔬 Methodology: Difference-in-differences analysis</span></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">Inclusionary Zoning in Massachusetts: A Solution to Exclusion or Short-Sighted Delusion?</div><div class="card-meta"><span>👤 Andrew Mikula</span><span>🏛️ Pioneer Institute (Boston)</span><span>📅 2023</span><span>📍 Massachusetts statewide</span></div></div><span class="card-stance stance-supports">🔴 Supports thesis</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li>As of 2019, <strong>a third of Massachusetts IZ programs had produced zero new affordable units</strong></li><li>Research shows IZ "frequently forces developers to raise market-rate prices to offset monetary losses on income-restricted units"</li></ul>
+          <div class="quote-pull red">"IZ projects often depend on high market-rate housing prices for their viability, thus limiting their potential to broadly improve housing affordability."</div>
+          <p>A 2024 Harvard study cited by Mikula found that when Boston <em>increased</em> its IZ set-aside from 13% to 17%, it could reduce new unit production by <strong>5–12%</strong>. Fewer units built = tighter supply = higher rents broadly.</p>
+        </div>
+        <div class="card-footer"><span>📄 Pioneer Institute Policy Paper</span><a href="https://pioneerinstitute.org/study-inclusionary-zoning-helps-some-but-can-jeopardize-broad-based-affordability/" target="_blank" rel="noopener">Summary →</a><span>⚠️ Source leans free-market — weight accordingly</span></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">Determining Rents in Mixed-Income Properties (VSI Dataset)</div><div class="card-meta"><span>👤 Vogt Strategic Insights</span><span>🏛️ Tax Credit Advisor / Industry Research</span><span>📅 2019</span><span>📍 National — 932 LIHTC properties</span></div></div><span class="card-stance stance-supports">🔴 Supports thesis</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li>Market-rate rents within mixed-income buildings are explicitly priced to cover the revenue gap from below-market units — standard documented developer practice</li><li>In Arizona sample: 2BR market-rate units averaged $917/mo vs. $793 for 50% AMI units — a <strong>15.6% premium</strong> within the same building</li></ul>
+          <div class="quote-pull red">"You need to determine what market rents should be set at when the affordable rents are known."</div>
+          <p>This study directly confirms the within-building pricing mechanism. It's industry data confirming that developers deliberately price market-rate units above what comparable stand-alone units might charge.</p>
+        </div>
+        <div class="card-footer"><span>📄 Tax Credit Advisor / VSI Industry Research</span><a href="https://www.taxcreditadvisor.com/articles/economic-research-report-determining-rents-in-mixed-income-properties/" target="_blank" rel="noopener">Read Article →</a><span>🔬 932 properties, national sample</span></div>
+      </div>
+    </section>
+
+    <section id="counters">
+      <div class="section-label">Evidence Against the Thesis</div>
+      <h2>Research That Challenges or Complicates the Argument</h2>
+      <hr class="divider">
+      <p>Intellectual honesty requires presenting the strongest counter-arguments. Here are the most significant studies and perspectives that push back on or limit the scope of your thesis.</p>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">New Supply and Neighborhood Rent Effects (Minneapolis, Chicago, Seattle)</div><div class="card-meta"><span>👤 Multiple researchers including Asquith, Mast &amp; Reed; Pennington</span><span>🏛️ NBER, Upjohn Institute</span><span>📅 2021–2023</span></div></div><span class="card-stance stance-counters">🟢 Counters thesis</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li><strong>New apartment construction — even luxury — reduces nearby rents</strong> by absorbing high-income demand that would otherwise bid up existing housing stock</li><li>In Minneapolis, constructing a new market-rate building within 500 meters was associated with <strong>rents declining 5–7%</strong> in nearby units over 2–5 years</li></ul>
+          <div class="quote-pull green">"Even if market-rate units within a mixed-income building carry a small premium, the net effect on neighborhood rents may be negative — meaning renters broadly are better off."</div>
+          <p><strong>Narberth caveat:</strong> These studies focus on large urban markets with thousands of units added continuously. A borough of 0.5 sq miles adding 50–100 units over several years is not the same experiment in kind or scale.</p>
+        </div>
+        <div class="card-footer"><span>📄 NBER Working Papers; Upjohn Institute</span><span>🔬 Natural experiment methodology; address-level rent data</span></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">IZ Produces Real Benefits for Low-Income Families (RAND, 11-City Study)</div><div class="card-meta"><span>👤 Schwartz, Ecola, Leuschner &amp; Kofner</span><span>🏛️ RAND Corporation</span><span>📅 2012</span><span>📍 11 jurisdictions nationwide</span></div></div><span class="card-stance stance-counters">🟢 Counters thesis</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li>IZ homes are widely dispersed — <strong>76% located in low-poverty neighborhoods</strong></li><li>IZ provides low-income families meaningful access to better schools, lower-crime neighborhoods, and economic opportunity</li></ul>
+          <p>This research doesn't directly refute the cross-subsidy mechanism — it largely sidesteps the pricing question to focus on outcomes. But it makes a powerful point: the benefit to the households receiving affordable units may be very large. Whether the trade-off is "worth it" is a values question, not just an economics question.</p>
+        </div>
+        <div class="card-footer"><span>📄 RAND Corporation, "Is Inclusionary Zoning Inclusionary?"</span><span>🔬 11-jurisdiction national study</span></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">Density Bonuses May Offset Cross-Subsidy Costs</div><div class="card-meta"><span>👤 Multiple researchers; summarized in Local Housing Solutions review</span><span>🏛️ NYU Furman Center / Local Housing Solutions</span><span>📅 2023</span></div></div><span class="card-stance stance-mixed">🟡 Mixed — conditional counter</span></div>
+        <div class="card-body">
+          <h4>The Argument</h4>
+          <p>When IZ is paired with a <strong>density bonus</strong> — allowing the developer to build more total units than zoning would otherwise permit — the additional market-rate units can generate enough revenue to subsidize the affordable units without raising rents on the others.</p>
+          <div class="quote-pull amber">The Mercatus study found that in the Baltimore-Washington region, most optional IZ programs with density bonuses produced zero affordable units — indicating the bonus value didn't outweigh the cost of providing discounted units.</div>
+          <p><strong>The Narberth implication:</strong> For this counter-argument to apply, Narberth's density bonus would need to be generous enough that the extra units cover the entire affordable unit subsidy. Whether the council's current proposal achieves that math has not been publicly demonstrated.</p>
+        </div>
+        <div class="card-footer"><span>📄 NYU Furman Center / Local Housing Solutions, 2023</span><span>⚠️ Effect is highly dependent on density bonus size and market conditions</span></div>
+      </div>
+    </section>
+
+    <section id="supply">
+      <div class="section-label">A Separate but Related Question</div>
+      <h2>🏗️ Does Adding Market-Rate Housing Stock Reduce Rents?</h2>
+      <hr class="divider">
+      <p>This is a distinct question from whether mixed-income buildings raise rents on their market-rate units. Here we ask: does building more market-rate apartments reduce what existing renters pay? This is the foundational claim behind the council's "more supply = more affordable" argument.</p>
+      <div class="thesis-box">
+        <div class="thesis-label">The Supply Hypothesis</div>
+        <blockquote>"Adding new market-rate housing units to a tight market increases the overall supply of available rentals, which — through basic supply-and-demand economics — should reduce rents for existing units in the surrounding area."</blockquote>
+        <p class="thesis-note">This is the "filtering" theory of housing economics — the primary intellectual basis for YIMBY ("Yes In My Backyard") housing advocacy. The research increasingly supports it — with important scale and context conditions.</p>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">New Market-Rate Housing Construction and Nearby Rents</div><div class="card-meta"><span>👤 Asquith, Mast &amp; Reed</span><span>🏛️ Federal Reserve Bank of Cleveland / Upjohn Institute</span><span>📅 2021 (revised 2023)</span><span>📍 Chicago, Minneapolis, Seattle</span></div></div><span class="card-stance stance-counters">🟢 Supports supply argument</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li>New market-rate construction caused rents in nearby buildings to fall by <strong>5–7% within 500 meters</strong> over a 2–5 year window</li><li>The effect was strongest for <strong>low- and moderate-income renters</strong> in the surrounding area</li></ul>
+          <div class="quote-pull green">"A new market-rate building causes rents in nearby buildings to fall, with the largest effects concentrated close to the new building and among lower-priced units."</div>
+          <p><strong>Limitation for Narberth:</strong> The effect was measured in large urban markets. Even if Narberth's zoning changes produce 50–100 new units over several years, that represents a 3–6% increase in Narberth's housing stock — but Narberth is embedded in a regional market of hundreds of thousands of units. That stock addition is unlikely to produce measurable demand relief at the neighborhood level.</p>
+        </div>
+        <div class="card-footer"><span>📄 Upjohn Institute Working Paper 21-338</span><a href="https://research.upjohn.org/up_workingpapers/338/" target="_blank" rel="noopener">Abstract →</a></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">New Market-Rate Housing and Filtering: Evidence from Helsinki</div><div class="card-meta"><span>👤 Bratu, Eriksson &amp; Holmlund</span><span>🏛️ Uppsala University / IFAU</span><span>📅 2023</span><span>📍 Helsinki, Finland</span></div></div><span class="card-stance stance-counters">🟢 Supports supply/filtering argument</span></div>
+        <div class="card-body">
+          <h4>Key Findings</h4>
+          <ul><li>Each new market-rate housing unit built triggered a chain of approximately <strong>2.5 moves</strong></li><li>The final units freed up were predominantly in <strong>lower-cost neighborhoods</strong></li><li>For every 100 new market-rate units built, roughly <strong>70 lower-income households benefited</strong> through the filtering chain</li></ul>
+          <div class="quote-pull green">"New construction triggers moving chains that extend deep into lower-income neighborhoods, creating affordable vacancies as a downstream effect of market-rate development."</div>
+        </div>
+        <div class="card-footer"><span>📄 Uppsala University / IFAU Working Paper, 2023</span><span>🔬 Full population housing registry; Helsinki metro</span></div>
+      </div>
+
+      <div class="research-card">
+        <div class="card-header"><div class="card-header-left"><div class="card-title">Supply Skepticism: Housing Supply and Affordability</div><div class="card-meta"><span>👤 Miriam Zuk &amp; Karen Chapple</span><span>🏛️ UC Berkeley, Urban Displacement Project</span><span>📅 2016/2019</span><span>📍 San Francisco Bay Area + national review</span></div></div><span class="card-stance stance-supports">🔴 Challenges supply argument</span></div>
+        <div class="card-body">
+          <h4>Key Arguments</h4>
+          <ul><li>In <strong>already-gentrifying neighborhoods</strong>, new market-rate construction can <em>signal</em> desirability to developers and high-income migrants, accelerating price increases</li><li>In tight, desirable markets, new housing can attract new residents rather than simply accommodating existing demand</li></ul>
+          <div class="quote-pull red">"In high-cost, high-demand markets, new market-rate construction may not reduce rents for low-income residents in the near term, and may accelerate displacement by signaling neighborhood desirability."</div>
+          <p><strong>The Narberth angle:</strong> This is the argument that most directly applies to Narberth. Adding 25 new units may not reduce demand — it may attract 25 additional high-income households to a borough that would not otherwise have had capacity for them.</p>
+          <p><strong>Limitations:</strong> Most economists consider this the minority view in the academic literature. The weight of recent peer-reviewed evidence points toward supply reducing rents.</p>
+        </div>
+        <div class="card-footer"><span>📄 UC Berkeley, Urban Displacement Project</span><a href="https://www.urbandisplacement.org" target="_blank" rel="noopener">Urban Displacement Project →</a></div>
+      </div>
+
+      <div class="callout callout-blue"><strong>🔑 Key Distinction: Supply Effects vs. IZ Cross-Subsidy Effects</strong>These are two separate questions that often get conflated in housing debates. The supply literature asks: does adding units reduce rents broadly? — and finds: generally yes, at sufficient scale, with a lag. The IZ cross-subsidy question asks: do affordable set-asides cause the market-rate units in the same building to be priced higher? — and finds: generally yes, as documented industry practice. Both things can be true simultaneously.</div>
+
+      <div class="callout callout-amber"><strong>⚠️ The Scale Problem for Small Boroughs</strong>Every supply study that found meaningful rent reduction involved adding hundreds to thousands of units in dense urban markets. Narberth's proposed zoning changes could plausibly produce 50–100 new units over several years — not trivial on paper, but against a Philadelphia metro area of over 2 million households, that addition does not shift the regional demand curve that makes Narberth expensive.</div>
+    </section>
+
+    <section id="summary">
+      <div class="section-label">At a Glance</div>
+      <h2>Research Summary Table</h2>
+      <hr class="divider">
+      <div class="summary-table-wrap">
+        <table>
+          <thead><tr><th>Study / Source</th><th>Year</th><th>Methodology</th><th>Stance</th><th>Key Finding</th><th>Caveats</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hamilton / Mercatus</strong><br><em>Baltimore–Washington</em></td><td>2019</td><td>Diff-in-diff</td><td><span class="badge badge-red">Supports ↑</span></td><td>Mandatory IZ raises area prices ~1%/yr</td><td>Measures market-level not within-building</td></tr>
+            <tr><td><strong>Mikula / Pioneer Institute</strong><br><em>Massachusetts</em></td><td>2023</td><td>Program review</td><td><span class="badge badge-red">Supports ↑</span></td><td>IZ "frequently forces" higher market-rate prices; 1/3 of MA programs produced zero units</td><td>Free-market think tank; Massachusetts-specific</td></tr>
+            <tr><td><strong>Vogt Strategic Insights</strong><br><em>932 US properties</em></td><td>2019</td><td>Actual unit-level rent data</td><td><span class="badge badge-red">Supports ↑</span></td><td>Market-rate rents explicitly set above comparable stand-alone units to fund cross-subsidy</td><td>Industry data, not peer-reviewed</td></tr>
+            <tr><td><strong>Asquith, Mast &amp; Reed / NBER</strong><br><em>Minneapolis, Chicago, Seattle</em></td><td>2021</td><td>Natural experiment, address-level data</td><td><span class="badge badge-green">Counters ↓</span></td><td>New construction reduces nearby rents 5–7%</td><td>Large urban markets; Narberth scale may not apply</td></tr>
+            <tr><td><strong>Schwartz et al. / RAND</strong><br><em>11 jurisdictions</em></td><td>2012</td><td>Multi-site evaluation</td><td><span class="badge badge-green">Counters ↓</span></td><td>IZ places low-income families in low-poverty areas; real social benefits</td><td>Does not measure market-rate tenant cost impact</td></tr>
+            <tr><td><strong>NYU Furman / Local Housing Solutions</strong><br><em>Multiple</em></td><td>2023</td><td>Policy review</td><td><span class="badge badge-amber">Mixed ↕</span></td><td>Density bonuses can offset cross-subsidy — if generous enough</td><td>Effect conditional on bonus design; often insufficient</td></tr>
+            <tr><td><strong>Bratu et al. / Uppsala</strong><br><em>Helsinki, Finland</em></td><td>2023</td><td>Full population registry</td><td><span class="badge badge-green">Filtering confirmed ↓</span></td><td>Each new unit triggers ~2.5-unit move chain; 70% of benefits reach lower-income households</td><td>Finnish housing law differs from U.S.; long time horizon</td></tr>
+            <tr><td><strong>Zuk &amp; Chapple / UC Berkeley</strong><br><em>Bay Area + national</em></td><td>2016/2019</td><td>Literature review + Bay Area data</td><td><span class="badge badge-red">Supply skeptic ↑</span></td><td>In gentrifying markets, new construction may signal desirability and accelerate prices</td><td>Minority view in economics literature; most relevant to small high-demand markets</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="bottom-line">
+      <div class="section-label">Synthesis</div>
+      <h2>The Bottom Line</h2>
+      <hr class="divider">
+      <div class="verdict verdict-supports">
+        <div class="verdict-icon">🔴</div>
+        <div>
+          <div class="verdict-title">What the Research Clearly Establishes</div>
+          <div class="verdict-text">The <strong>cross-subsidy mechanism is real and documented</strong>. Developers of mixed-income buildings explicitly price market-rate units to cover the revenue gap from affordable units. At the market level, empirical studies in the Baltimore-Washington region show mandatory IZ raises overall prices ~1%/year.</div>
+        </div>
+      </div>
+      <div class="verdict verdict-counters">
+        <div class="verdict-icon">🟢</div>
+        <div>
+          <div class="verdict-title">What the Counter-Evidence Establishes</div>
+          <div class="verdict-text">In large urban markets with meaningful new supply, adding housing — even mixed-income housing — tends to <strong>reduce nearby rents</strong> by absorbing demand. The RAND research documents genuine social mobility benefits for affordable unit recipients. And density bonuses, if designed well, can theoretically neutralize the within-building cross-subsidy entirely.</div>
+        </div>
+      </div>
+      <div class="verdict verdict-mixed">
+        <div class="verdict-icon">⚖️</div>
+        <div>
+          <div class="verdict-title">The Honest Assessment for a Place Like Narberth</div>
+          <div class="verdict-text">The supply-side counter-argument depends critically on <em>scale relative to regional demand</em>. Even if the current zoning proposals yield 50–100 new units borough-wide — with perhaps 5–10 designated affordable — that addition is too small to shift regional demand for a desirable, transit-connected suburb. The cross-subsidy effect on market-rate tenants within each mixed-income building remains the more immediate and direct impact. Meanwhile, the total affordable units produced would number in the single digits per building — permanent density and character changes in exchange for a handful of below-market units.</div>
+        </div>
+      </div>
+      <div class="callout callout-navy"><strong>📌 For use in public comment or advocacy</strong>The strongest citable claim based on this research is: <em>"Empirical research (Hamilton, Mercatus Center, 2019 — Baltimore-Washington region) has found that mandatory inclusionary zoning raises housing prices approximately 1% per year of program existence, making housing less affordable for market-rate renters who don't receive subsidized units. The financial mechanism behind this — market-rate units being priced above market to cross-subsidize affordable units — is documented as standard practice in analyses of nearly 1,000 U.S. mixed-income properties (Vogt Strategic Insights, 2018). The strongest counter-argument — that supply addition reduces nearby rents — depends on construction at scales not applicable to a 0.5-square-mile borough."</em></div>
+    </section>
+
+    <section id="glossary">
+      <div class="section-label">Reference Key</div>
+      <h2>Abbreviations &amp; Terms Glossary</h2>
+      <hr class="divider">
+      <p style="margin-bottom:1.5rem;">All abbreviations and technical terms used in this report, explained in plain language.</p>
+      <div class="glossary-grid">
+        <div class="gloss-item"><div class="gloss-term">IZ</div><div class="gloss-def"><strong>Inclusionary Zoning.</strong> A local government policy that requires or incentivizes developers to include a percentage of below-market-rate units in new residential developments.</div></div>
+        <div class="gloss-item"><div class="gloss-term">AMI</div><div class="gloss-def"><strong>Area Median Income.</strong> The midpoint household income for a metropolitan area, calculated annually by HUD. For the Philadelphia metro, AMI is approximately $94,600 (2023).</div></div>
+        <div class="gloss-item"><div class="gloss-term">BMR</div><div class="gloss-def"><strong>Below Market Rate.</strong> A unit rented or sold at a price set below what the open market would charge — typically affordable to households earning 60–80% of AMI.</div></div>
+        <div class="gloss-item"><div class="gloss-term">LIHTC</div><div class="gloss-def"><strong>Low Income Housing Tax Credit.</strong> The primary federal program for financing affordable housing construction. Many mixed-income buildings are LIHTC-financed.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Cross-subsidy</div><div class="gloss-def">The financial mechanism by which revenue from market-rate units in a mixed-income building offsets the revenue shortfall from below-market-rate units.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Density bonus</div><div class="gloss-def">Permission granted to a developer to build more units than baseline zoning allows, in exchange for including affordable units.</div></div>
+        <div class="gloss-item"><div class="gloss-term">HUD</div><div class="gloss-def"><strong>U.S. Department of Housing and Urban Development.</strong> The federal agency overseeing housing policy, fair housing enforcement, and housing finance regulation.</div></div>
+        <div class="gloss-item"><div class="gloss-term">FMR / SAFMR</div><div class="gloss-def"><strong>Fair Market Rent / Small Area Fair Market Rent.</strong> HUD's annual estimate of the 40th percentile of asking rents for standard units in a given area, calculated at the zip code level.</div></div>
+        <div class="gloss-item"><div class="gloss-term">ZORI</div><div class="gloss-def"><strong>Zillow Observed Rent Index.</strong> Zillow's monthly index of asking rents across all home types, calculated from active listings data.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Filtering</div><div class="gloss-def">The economic process by which housing units become more affordable over time as they age, depreciate, and are vacated by higher-income residents moving into newer units.</div></div>
+        <div class="gloss-item"><div class="gloss-term">YIMBY</div><div class="gloss-def"><strong>"Yes In My Backyard."</strong> A housing advocacy movement that supports new residential construction on the grounds that increased supply reduces rents broadly through filtering and demand absorption.</div></div>
+        <div class="gloss-item"><div class="gloss-term">NIMBY</div><div class="gloss-def"><strong>"Not In My Backyard."</strong> Opposition to new development by existing residents concerned about neighborhood character, parking, traffic, or density.</div></div>
+        <div class="gloss-item"><div class="gloss-term">TOD</div><div class="gloss-def"><strong>Transit-Oriented Development.</strong> A planning strategy concentrating higher-density mixed-use development within walking distance of transit stations. Often paired with IZ policies.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Diff-in-diff</div><div class="gloss-def"><strong>Difference-in-differences.</strong> A statistical research methodology comparing outcomes before/after a policy change in treated areas vs. untreated control areas.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Demand absorption</div><div class="gloss-def">The mechanism by which new housing units capture high-income renters who would otherwise compete for existing lower-cost units, relieving pressure on older and more affordable stock.</div></div>
+        <div class="gloss-item"><div class="gloss-term">Induced demand</div><div class="gloss-def">The phenomenon where new supply creates its own new demand — new housing attracts new residents rather than simply accommodating existing demand.</div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-footer">
+    <strong>Sources:</strong> Mercatus Center (Hamilton, 2019) · Pioneer Institute (Mikula, 2023) · Vogt Strategic Insights / Tax Credit Advisor (2019) · HUD Evidence Matters (2013) · RAND Corporation (Schwartz et al., 2012) · Asquith, Mast &amp; Reed / Upjohn Institute (2021) · Pennington / BEA (2021) · Bratu, Eriksson &amp; Holmlund / Uppsala University (2023) · Rosenthal / AER (2014) · Zuk &amp; Chapple / UC Berkeley (2016/2019) · NYU Furman Center (2023)<br>
+    Compiled March 2026 · Independent research review · Not affiliated with any political organization, government agency, or advocacy group
+  </footer>
+
+</div><!-- /tab-iz -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB 3 — PROPERTY MAP
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-map" class="tab-section">
+
+  <div class="map-header">
+    <h1>🏘️ Narberth Borough Housing Affordability Map</h1>
+    <p>Active listings, recent sales &amp; rentals — mapped against Narberth's 80% AMI affordability thresholds</p>
+  </div>
+
+  <div class="ami-bar">
+    <div class="ami-group">
+      <span class="title">80% AMI Max Rent by Household</span>
+      <table><tr><td>👤 1 Person</td><td>$1,522/mo</td></tr><tr><td>👤👤 2 Person</td><td>$1,760/mo</td></tr><tr><td>👤👤👤 3 Person</td><td>$1,999/mo</td></tr><tr><td>👤👤👤👤 4 Person / Family</td><td>$2,235/mo</td></tr></table>
+    </div>
+    <div class="ami-group">
+      <span class="title">Max Affordable Purchase Price (6.4% / 30yr / 28% rule)</span>
+      <table><tr><td>👤 1 Person ($60,880/yr)</td><td>≈ $227,000</td></tr><tr><td>👤👤 2 Person ($70,400/yr)</td><td>≈ $263,000</td></tr><tr><td>👤👤👤 3 Person ($79,960/yr)</td><td>≈ $298,000</td></tr><tr><td>👤👤👤👤 4 Person ($119,400/yr)</td><td>≈ $446,000</td></tr></table>
+    </div>
+    <div class="ami-group">
+      <span class="title">Map Legend</span>
+      <table><tr><td>🟢 Green pin</td><td>Affordable (any household)</td></tr><tr><td>🔴 Red pin</td><td>For Sale — above threshold</td></tr><tr><td>🔵 Blue pin</td><td>Rental — above threshold</td></tr><tr><td>⚫ Grey pin</td><td>Recently sold parcel</td></tr></table>
+    </div>
+  </div>
+
+  <div class="map-stats-grid" id="statsGrid"></div>
+  <div class="breakdown-section" id="breakdownSection"></div>
+  <div class="type-breakdown" id="typeBreakdown"></div>
+
+  <div class="legend-bar">
+    <span><span class="legend-dot" style="background:#2e7d32"></span>Affordable (any household)</span>
+    <span><span class="legend-dot" style="background:#c62828"></span>For Sale — above threshold</span>
+    <span><span class="legend-dot" style="background:#1565c0"></span>Rental — above threshold</span>
+    <span><span class="legend-dot" style="background:#555"></span>Recently sold (last 12 mo)</span>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="listings-section">
+    <div class="section-title-map">Active Listings &amp; Recent Sales</div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="filterTable('all',this)">All</button>
+      <button class="filter-btn" onclick="filterTable('affordable',this)">✅ Affordable Only</button>
+      <button class="filter-btn" onclick="filterTable('forsale',this)">🏠 For Sale</button>
+      <button class="filter-btn" onclick="filterTable('rental',this)">🔑 Rentals</button>
+      <button class="filter-btn" onclick="filterTable('sold',this)">📋 Recent Sales</button>
+    </div>
+    <table class="listings-table">
+      <thead><tr><th>Address</th><th>Property Type</th><th>Category</th><th>Price / Rent</th><th>Beds</th><th>Baths</th><th>Sq Ft</th><th>Affordability</th><th>Link</th></tr></thead>
+      <tbody id="listingsBody"></tbody>
+    </table>
+  </div>
+
+  <div class="map-note">
+    Data: Redfin active listings &amp; recent sales (Apr 2, 2026) · Apartments.com · Zillow · Thresholds: Narberth Borough 80% AMI. Map: Leaflet.js / OpenStreetMap.
+  </div>
+
+</div><!-- /tab-map -->
+
+<script>
+let mapInitialized = false;
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'map' && !mapInitialized) { mapInitialized = true; setTimeout(initMap, 100); }
+  window.scrollTo(0,0);
+}
+
+const C = { navy:'#1a2f4e', blue:'#2563eb', teal:'#0891b2', green:'#059669', amber:'#d97706', red:'#dc2626' };
+const ML = ['2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02'];
+const brynMawr  = [2191,2131,2163,2251,2359,2368,2374,2389,2364,2372,2337,2334,2283,2343,2378,2408,2433,2457,2456,2404,2366,2340,2366,2398,2480,2467,2488,2461,2459,2474,2508,2509,2500,2469,2539,2555,2585,2686];
+const wynnewood = [2145,2146,2184,2213,2264,2270,2283,2231,2281,2243,2227,2187,2221,2262,2271,2264,2283,2358,2389,2442,2353,2363,2247,2234,2221,2339,2425,2432,2375,2350,2339,2288,2257,2230,2287,2323,2360,2315];
+const ardmore   = [1964,2007,2012,2052,2015,2034,2021,2051,2078,2097,2066,2071,2105,2134,2152,2147,2148,2126,2153,2170,2200,2180,null,2150,2162,2237,2287,2336,2299,2273,2333,2383,2403,2292,2240,2277,2351,2375];
+
+new Chart(document.getElementById('hudBarChart'), { type:'bar', data:{ labels:['FY2021','FY2022','FY2023','FY2024','FY2025'], datasets:[{label:'Studio (0BR)',data:[1170,1210,1390,1670,1800],backgroundColor:'#bfdbfe',borderColor:'#93c5fd',borderWidth:1},{label:'1 Bedroom',data:[1350,1380,1570,1860,1980],backgroundColor:C.blue,borderColor:'#1d4ed8',borderWidth:1},{label:'2 Bedroom',data:[1640,1670,1890,2230,2360],backgroundColor:C.navy,borderColor:C.navy,borderWidth:1},{label:'3 Bedroom',data:[2040,2060,2300,2700,2840],backgroundColor:C.teal,borderColor:'#0e7490',borderWidth:1}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:false,min:900,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('mainlineChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Bryn Mawr (19010)',data:brynMawr,borderColor:C.navy,backgroundColor:'rgba(26,47,78,0.07)',tension:0.35,pointRadius:2,fill:false},{label:'Wynnewood (19096)',data:wynnewood,borderColor:C.blue,backgroundColor:'rgba(37,99,235,0.07)',tension:0.35,pointRadius:2,fill:false},{label:'Ardmore (19003)',data:ardmore,borderColor:C.teal,backgroundColor:'rgba(8,145,178,0.07)',tension:0.35,pointRadius:2,fill:false,spanGaps:true}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:{mode:'index',intersect:false}},scales:{x:{ticks:{maxTicksLimit:13,maxRotation:40}},y:{beginAtZero:false,min:1600,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('snapCompChart'), { type:'bar', data:{ labels:['Narberth 19072','Bryn Mawr 19010','Ardmore 19003','Wynnewood 19096','Havertown 19083'], datasets:[{label:'Latest Asking Rent',data:[3575,2686,2375,2315,1765],backgroundColor:[C.red,C.navy,C.blue,C.teal,C.green]}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,min:1500,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('changePctChart'), { type:'bar', data:{ labels:['Bryn Mawr','Ardmore','Wynnewood'], datasets:[{label:'% Change Jan 2024 to Feb 2026',data:[17.6,12.8,4.2],backgroundColor:[C.navy,C.teal,C.blue]}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}} });
+new Chart(document.getElementById('affordChart'), { type:'bar', data:{ labels:['Studio','1 BR','2 BR','3 BR','All-Homes (Zillow)'], datasets:[{label:'Income Required',data:[72000,79200,94400,113600,143000],backgroundColor:['#86efac','#fde68a','#fca5a5','#f87171','#dc2626']},{label:'Montco Median HH Income ($94,600)',data:[94600,94600,94600,94600,94600],type:'line',borderColor:C.navy,borderDash:[7,3],borderWidth:2.5,pointRadius:0,fill:false}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:false,min:55000,ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}} });
+new Chart(document.getElementById('growthChart'), { type:'bar', data:{ labels:['Studio','1 BR','2 BR','3 BR'], datasets:[{label:'FY21-22',data:[3.4,2.2,1.8,1.0],backgroundColor:'#bfdbfe'},{label:'FY22-23',data:[14.9,13.8,13.2,11.7],backgroundColor:C.amber},{label:'FY23-24',data:[20.1,18.5,18.0,17.4],backgroundColor:C.red},{label:'FY24-25',data:[7.8,6.5,5.8,5.2],backgroundColor:C.teal}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}} });
+new Chart(document.getElementById('hudLineChart'), { type:'line', data:{ labels:['FY2021','FY2022','FY2023','FY2024','FY2025'], datasets:[{label:'Studio (0BR)',data:[1170,1210,1390,1670,1800],borderColor:'#93c5fd',backgroundColor:'transparent',tension:0.3,pointRadius:5},{label:'1 Bedroom',data:[1350,1380,1570,1860,1980],borderColor:C.blue,backgroundColor:'transparent',tension:0.3,pointRadius:6,borderWidth:2.5},{label:'2 Bedroom',data:[1640,1670,1890,2230,2360],borderColor:C.navy,backgroundColor:'transparent',tension:0.3,pointRadius:6,borderWidth:2.5},{label:'3 Bedroom',data:[2040,2060,2300,2700,2840],borderColor:C.teal,backgroundColor:'transparent',tension:0.3,pointRadius:6,borderWidth:2.5}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:false,min:1000,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('brynMawrChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Bryn Mawr 19010',data:brynMawr,borderColor:C.navy,backgroundColor:'rgba(26,47,78,0.07)',tension:0.3,fill:true,pointRadius:2}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:10,maxRotation:40}},y:{beginAtZero:false,min:2000,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('ardmoreChart'), { type:'line', data:{ labels:ML, datasets:[{label:'Ardmore 19003',data:ardmore,borderColor:C.teal,backgroundColor:'rgba(8,145,178,0.07)',tension:0.3,fill:true,pointRadius:2,spanGaps:true}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:10,maxRotation:40}},y:{beginAtZero:false,min:1800,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+new Chart(document.getElementById('gapChart'), { type:'line', data:{ labels:['FY2021','FY2022','FY2023','FY2024','FY2025'], datasets:[{label:'Actual HUD FMR (1BR)',data:[1350,1380,1570,1860,1980],borderColor:C.red,backgroundColor:'rgba(220,38,38,0.07)',fill:true,tension:0.3,pointRadius:6,borderWidth:2.5},{label:'Affordable 1BR at 80% AMI (~$1,258/mo)',data:[1258,1258,1258,1258,1258],borderColor:C.green,borderDash:[8,4],borderWidth:2.5,pointRadius:0,fill:false},{label:'Affordable at 60% AMI (~$944/mo)',data:[944,944,944,944,944],borderColor:'#86efac',borderDash:[4,4],borderWidth:2,pointRadius:0,fill:false}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'},tooltip:{mode:'index',intersect:false}},scales:{y:{beginAtZero:false,min:800,ticks:{callback:v=>'$'+v.toLocaleString()}}}} });
+
+const T = { rent:{1:1522,2:1760,3:1999,4:2235}, purchase:{1:227000,2:263000,3:298000,4:446000} };
+const forSaleListings = [
+  {addr:"200 Sabine Ave",propType:"Single Family",price:1199900,beds:6,baths:4.0,sqft:3470,url:"https://www.redfin.com/PA/Narberth/200-Sabine-Ave-19072/home/38092909",lat:40.0110805,lng:-75.2647128},
+  {addr:"1637 Oakwood Dr Unit S114",propType:"Condo",price:359900,beds:1,baths:1.5,sqft:1060,url:"https://www.redfin.com/PA/Narberth/1637-Oakwood-Dr-19072/unit-S-114/home/186227753",lat:40.0394893,lng:-75.2554259},
+  {addr:"129 Rockland Ave",propType:"Single Family",price:1350000,beds:3,baths:3.0,sqft:2199,url:"https://www.redfin.com/PA/Narberth/129-Rockland-Ave-19072/home/194987651",lat:40.001401,lng:-75.261207},
+  {addr:"206 Price Ave #2",propType:"Townhouse",price:1249000,beds:3,baths:3.0,sqft:2566,url:"https://www.redfin.com/PA/Narberth/206-Price-Ave-19072/unit-2/home/69097600",lat:40.0098191,lng:-75.2636956},
+  {addr:"237 N Essex Ave",propType:"Single Family",price:725000,beds:4,baths:2.0,sqft:2227,url:"https://www.redfin.com/PA/Narberth/237-N-Essex-Ave-19072/home/38091153",lat:40.0089237,lng:-75.2634875},
+  {addr:"1637 Oakwood Dr Unit S115",propType:"Condo",price:230000,beds:1,baths:1.0,sqft:858,url:"https://www.redfin.com/PA/Narberth/1637-Oakwood-Dr-19072/unit-S115/home/176351640",lat:40.0394903,lng:-75.2554270},
+  {addr:"146 Merion Ave",propType:"Townhouse",price:1149900,beds:4,baths:4.0,sqft:3440,url:"https://www.redfin.com/PA/Narberth/146-Merion-Ave-19072/home/194987650",lat:40.0016086,lng:-75.2611693},
+  {addr:"142 Merion Ave",propType:"Townhouse",price:1149900,beds:4,baths:4.0,sqft:3440,url:"https://www.redfin.com/PA/Narberth/142-Merion-Ave-19072/home/194987649",lat:40.00164,lng:-75.261217},
+];
+const rentalListings = [
+  {addr:"36 N Narberth Ave (Lofts at Narberth Station)",propType:"Apartment Complex",price:2150,priceDisplay:"$2,150+/mo",beds:"1+",url:"https://www.apartments.com/the-lofts-at-narberth-station-narberth-pa/qlytrrx/",lat:40.00708,lng:-75.26348},
+  {addr:"300 N Essex Ave (Narberth Hall)",propType:"Apartment Complex",price:1735,priceDisplay:"$1,735+/mo",beds:"1+",url:"https://www.apartments.com/narberth-hall-narberth-pa/56w8t7m/",lat:40.01163,lng:-75.26244},
+  {addr:"214 Price Ave (Montgomery Court)",propType:"Apartment Complex",price:1175,priceDisplay:"$1,175+/mo",beds:"Studio+",url:"https://www.apartments.com/montgomery-court-narberth-pa/yfqzz3r/",lat:40.00997,lng:-75.26380},
+  {addr:"650 Montgomery Ave (Narberth Square)",propType:"Apartment Complex",price:3085,priceDisplay:"$3,085+/mo",beds:"1+",url:"https://www.apartments.com/narberth-square-narberth-pa/rg2d5b3/",lat:40.00541,lng:-75.26696},
+  {addr:"114 Forrest Ave (The Elm)",propType:"Apartment Complex",price:1995,priceDisplay:"$1,995/mo",beds:"Studio",url:"https://www.apartments.com/the-elm-narberth-pa/nmjs29p/",lat:40.00751,lng:-75.26411},
+  {addr:"426 N Essex Ave",propType:"Apartment",price:1600,priceDisplay:"$1,600/mo",beds:1,url:"https://www.apartments.com/426-n-essex-ave-narberth-pa/1e6pxh5/",lat:40.01268,lng:-75.26215},
+  {addr:"108 Forrest Ave Unit 5",propType:"Apartment",price:2425,priceDisplay:"$2,425/mo",beds:2,url:"https://www.apartments.com/108-forrest-ave-narberth-pa/kwmqh7b/",lat:40.00771,lng:-75.26411},
+  {addr:"106 Forrest Ave Unit 1",propType:"Apartment",price:2350,priceDisplay:"$2,350/mo",beds:2,url:"https://www.apartments.com/106-forrest-ave-narberth-pa/ypbxd8s/",lat:40.00769,lng:-75.26408},
+  {addr:"1334 Montgomery Ave Unit B1",propType:"Apartment",price:2100,priceDisplay:"$2,100/mo",beds:1,sqft:615,url:"https://www.apartments.com/1334-montgomery-ave-narberth-pa-unit-b1/lhdygvg/",lat:40.01285,lng:-75.27225},
+  {addr:"1334 Montgomery Ave Unit D4",propType:"Apartment",price:2100,priceDisplay:"$2,100/mo",beds:1,sqft:633,url:"https://www.apartments.com/1334-montgomery-ave-narberth-pa-unit-d4/4h31vdh/",lat:40.01286,lng:-75.27226},
+  {addr:"1637 Oakwood Dr Unit S-113",propType:"Apartment",price:1995,priceDisplay:"$1,995/mo",beds:1,sqft:788,url:"https://www.apartments.com/1637-oakwood-dr-narberth-pa-unit-s-113/ylmy38s/",lat:40.03949,lng:-75.25543},
+  {addr:"33 Price Ave",propType:"Apartment",price:3150,priceDisplay:"$3,150/mo",beds:2,url:"https://www.apartments.com/33-price-ave-narberth-pa/cx824yd/",lat:40.00965,lng:-75.26701},
+  {addr:"258 Haverford Ave",propType:"Apartment",price:2195,priceDisplay:"$2,195/mo",beds:1,url:"https://www.apartments.com/258-haverford-ave-narberth-pa/cp2gy7f/",lat:40.00692,lng:-75.26420},
+  {addr:"1637 Oakwood Dr Unit S410",propType:"Apartment",price:1900,priceDisplay:"$1,900/mo",beds:1,sqft:960,url:"https://www.apartments.com/1637-oakwood-dr-narberth-pa-unit-s410/nmebx3p/",lat:40.03951,lng:-75.25541},
+  {addr:"80 Windsor Ave",propType:"Apartment",price:3725,priceDisplay:"$3,725/mo",beds:1,url:"https://www.apartments.com/80-windsor-ave-narberth-pa/0w4d8z3/",lat:40.00605,lng:-75.26494},
+  {addr:"509 Conway Ave #5D",propType:"Apartment",price:1500,priceDisplay:"$1,500/mo",beds:1,url:"https://www.zillow.com/homedetails/509-Conway-Ave-5D-Narberth-PA-19072/461097910_zpid/",lat:40.00820,lng:-75.26760},
+  {addr:"203 N Essex Ave APT 18",propType:"Apartment",price:2085,priceDisplay:"$2,085/mo",beds:1,url:"https://www.zillow.com/homedetails/203-N-Essex-Ave-APT-18-Narberth-PA-19072/2085645985_zpid/",lat:40.00798,lng:-75.26372},
+  {addr:"306 Dudley Ave",propType:"Rental House",price:3400,priceDisplay:"$3,400/mo",beds:3,url:"https://www.zillow.com/homedetails/306-Dudley-Ave-Narberth-PA-19072/9864046_zpid/",lat:40.00866,lng:-75.26499},
+  {addr:"1740 Oakwood Ter #14",propType:"Apartment",price:3500,priceDisplay:"$3,500/mo",beds:2,url:"https://www.zillow.com/homedetails/1740-Oakwood-Ter-14-Narberth-PA-19072/449005140_zpid/",lat:40.04013,lng:-75.25905},
+];
+const recentlySold = [
+  {addr:"9 Hansen Ct",propType:"Single Family",price:750000,beds:3,baths:3.5,sqft:2198,soldDate:"Dec 2025",url:"https://www.redfin.com/PA/Narberth/9-Hansen-Ct-19072/home/38090924",lat:40.0128318,lng:-75.2706087},
+  {addr:"213 Elm Ter",propType:"Single Family",price:950000,beds:5,baths:2.5,sqft:1831,soldDate:"2025",url:"https://www.redfin.com/PA/Narberth/213-Elm-Ter-19072/home/38091103",lat:40.0124993,lng:-75.2648152},
+  {addr:"229 Iona Ave",propType:"Single Family",price:625000,beds:3,baths:1.0,sqft:1338,soldDate:"2025",url:"https://www.redfin.com/PA/Narberth/229-Iona-Ave-19072/home/38090823",lat:40.0087937,lng:-75.2583855},
+  {addr:"232 Forrest Ave",propType:"Single Family",price:800000,beds:4,baths:2.0,sqft:1403,soldDate:"2025",url:"https://www.redfin.com/PA/Narberth/232-Forrest-Ave-19072/home/38091050",lat:40.0083388,lng:-75.2626104},
+  {addr:"21 Hansen Ct",propType:"Single Family",price:699500,beds:2,baths:2.5,sqft:2050,soldDate:"2025",url:"https://www.redfin.com/PA/Narberth/21-Hansen-Ct-19072/home/38090920",lat:40.0123061,lng:-75.2708258},
+  {addr:"412 Haverford Ave",propType:"Single Family",price:1150000,beds:5,baths:2.5,sqft:2154,soldDate:"2025",url:"https://www.redfin.com/PA/Narberth/412-Haverford-Ave-19072/home/38517738",lat:40.0069251,lng:-75.256504},
+  {addr:"526 Dudley Ave",propType:"Single Family",price:860000,beds:3,baths:1.5,sqft:1986,soldDate:"Jul 2025",url:"https://www.redfin.com/PA/Narberth/526-Dudley-Ave-19072/home/38091113",lat:40.0116615,lng:-75.2667283},
+  {addr:"208 Sabine Ave",propType:"Single Family",price:805000,beds:4,baths:2.0,sqft:1833,soldDate:"May 2025",url:"https://www.redfin.com/PA/Narberth/208-Sabine-Ave-19072/home/38092897",lat:40.0113717,lng:-75.2640479},
+  {addr:"1134 Montgomery Ave",propType:"Single Family",price:1175000,beds:6,baths:2.5,sqft:3936,soldDate:"Aug 2025",url:"https://www.redfin.com/PA/Narberth/1134-Montgomery-Ave-19072/home/38093133",lat:40.0132352,lng:-75.2667577},
+  {addr:"317 Meeting House Ln",propType:"Single Family",price:850000,beds:3,baths:2.5,sqft:1720,soldDate:"Jun 2025",url:"https://www.redfin.com/PA/Narberth/317-Meeting-House-Ln-19072/home/38093040",lat:40.0091926,lng:-75.2579943},
+  {addr:"303 Conway Ave",propType:"Single Family",price:750000,beds:3,baths:1.5,sqft:1635,soldDate:"Jul 2025",url:"https://www.redfin.com/PA/Narberth/303-Conway-Ave-19072/home/38089380",lat:40.0079644,lng:-75.2653286},
+  {addr:"23 Sabine Ave",propType:"Townhouse",price:450000,beds:3,baths:1.0,sqft:1540,soldDate:"Dec 2025",url:"https://www.redfin.com/PA/Narberth/23-Sabine-Ave-19072/home/38092754",lat:40.0100406,lng:-75.2686077},
+  {addr:"202 Dudley Ave",propType:"Townhouse",price:655000,beds:5,baths:2.0,sqft:1811,soldDate:"Feb 2026",url:"https://www.redfin.com/PA/Narberth/202-Dudley-Ave-19072/home/38090730",lat:40.0062699,lng:-75.2639855},
+  {addr:"410 Country Ln",propType:"Townhouse",price:600000,beds:3,baths:2.5,sqft:1398,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/410-Country-Ln-19072/home/38089235",lat:40.0092584,lng:-75.2683124},
+  {addr:"506 Homewood Ave",propType:"Townhouse",price:535000,beds:3,baths:2.0,sqft:1368,soldDate:"Jun 2025",url:"https://www.redfin.com/PA/Narberth/506-Homewood-Ave-19072/home/38090768",lat:40.0102275,lng:-75.2694049},
+  {addr:"309 Woodside Ave",propType:"Single Family",price:1650000,beds:5,baths:3.5,sqft:3684,soldDate:"Jul 2025",url:"https://www.redfin.com/PA/Narberth/309-Woodside-Ave-19072/home/38094555",lat:40.004172,lng:-75.2586763},
+  {addr:"502 N Essex Ave",propType:"Single Family",price:1100000,beds:4,baths:3.5,sqft:2101,soldDate:"Jun 2025",url:"https://www.redfin.com/PA/Narberth/502-N-Essex-Ave-19072/home/38090978",lat:40.0113769,lng:-75.2653377},
+  {addr:"406 Anthwyn Rd",propType:"Single Family",price:700000,beds:6,baths:2.5,sqft:2621,soldDate:"Jan 2026",url:"https://www.redfin.com/PA/Narberth/406-Anthwyn-Rd-19072/home/38476369",lat:40.0059293,lng:-75.2566753},
+  {addr:"9 Woodside Ave",propType:"Single Family",price:1115000,beds:5,baths:3.0,sqft:2550,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/9-Woodside-Ave-19072/home/38094531",lat:40.0025829,lng:-75.2649127},
+  {addr:"10 Elmwood Ave",propType:"Single Family",price:875000,beds:5,baths:1.5,sqft:2075,soldDate:"Apr 2025",url:"https://www.redfin.com/PA/Narberth/10-Elmwood-Ave-19072/home/38091186",lat:40.0029329,lng:-75.2652888},
+  {addr:"305 Grayling Ave",propType:"Single Family",price:725000,beds:4,baths:1.5,sqft:2016,soldDate:"May 2025",url:"https://www.redfin.com/PA/Narberth/305-Grayling-Ave-19072/home/38090878",lat:40.0098682,lng:-75.2604188},
+  {addr:"208 Barrie Rd",propType:"Single Family",price:989000,beds:4,baths:2.5,sqft:3176,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/208-Barrie-Rd-19072/home/38089499",lat:40.0093195,lng:-75.2628738},
+  {addr:"330 Dudley Ave",propType:"Single Family",price:1135050,beds:4,baths:2.5,sqft:2444,soldDate:"Jan 2026",url:"https://www.redfin.com/PA/Narberth/330-Dudley-Ave-19072/home/38091131",lat:40.0090694,lng:-75.2651957},
+  {addr:"216 N Narberth Ave",propType:"Multi-Family",price:765000,beds:6,baths:2.5,sqft:2598,soldDate:"Dec 2025",url:"https://www.redfin.com/PA/Narberth/216-N-Narberth-Ave-19072/home/38093084",lat:40.0079189,lng:-75.2613476},
+  {addr:"205 Woodside Ave",propType:"Single Family",price:906000,beds:6,baths:2.5,sqft:3126,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/205-Woodside-Ave-19072/home/38094552",lat:40.0039552,lng:-75.2608613},
+  {addr:"16 Narbrook Park",propType:"Single Family",price:2050000,beds:4,baths:3.5,sqft:2704,soldDate:"Feb 2026",url:"https://www.redfin.com/PA/Narberth/16-Narbrook-Park-19072/home/38092807",lat:40.0066154,lng:-75.2652841},
+  {addr:"9 Shirley Rd",propType:"Single Family",price:1225000,beds:5,baths:3.5,sqft:2815,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/9-Shirley-Rd-19072/home/38092937",lat:40.008483,lng:-75.2556126},
+  {addr:"308 Iona Ave",propType:"Townhouse",price:325000,beds:3,baths:1.0,sqft:984,soldDate:"Apr 2025",url:"https://www.redfin.com/PA/Narberth/308-Iona-Ave-19072/home/38090803",lat:40.0100965,lng:-75.2593768},
+  {addr:"99 Windsor Ave",propType:"Single Family",price:925000,beds:4,baths:4.0,sqft:2143,soldDate:"Apr 2025",url:"https://www.redfin.com/PA/Narberth/99-Windsor-Ave-19072/home/38092867",lat:40.0060481,lng:-75.264937},
+  {addr:"15 Woodbine Ave",propType:"Single Family",price:653000,beds:3,baths:1.5,sqft:1155,soldDate:"Apr 2025",url:"https://www.redfin.com/PA/Narberth/15-Woodbine-Ave-19072/home/38093165",lat:40.0088115,lng:-75.2632051},
+  {addr:"314 Dudley Ave",propType:"Single Family",price:1350000,beds:4,baths:4.0,sqft:3073,soldDate:"Jan 2026",url:"https://www.redfin.com/PA/Narberth/314-Dudley-Ave-19072/home/38091136",lat:40.0086735,lng:-75.2649859},
+  {addr:"507 Dudley Ave",propType:"Single Family",price:839000,beds:4,baths:1.5,sqft:1732,soldDate:"May 2025",url:"https://www.redfin.com/PA/Narberth/507-Dudley-Ave-19072/home/38090707",lat:40.0112004,lng:-75.2658941},
+  {addr:"317 Woodbine Ave",propType:"Townhouse",price:360000,beds:3,baths:1.0,sqft:1638,soldDate:"Nov 2025",url:"https://www.redfin.com/PA/Narberth/317-Woodbine-Ave-19072/home/38094558",lat:40.0100853,lng:-75.258534},
+  {addr:"114 N Essex Ave",propType:"Multi-Family",price:730000,beds:4,baths:null,sqft:2743,soldDate:"Jun 2025",url:"https://www.redfin.com/PA/Narberth/114-N-Essex-Ave-19072/home/38091012",lat:40.0059723,lng:-75.2627307},
+  {addr:"1655 Oakwood Dr N211",propType:"Condo",price:260000,beds:2,baths:2.0,sqft:1009,soldDate:"Oct 2025",url:"https://www.redfin.com/PA/Narberth/1655-Oakwood-Dr-19072/unit-N-211/home/162354278",lat:40.0403068,lng:-75.2547586},
+  {addr:"226 N Essex Ave #306",propType:"Condo",price:369000,beds:3,baths:2.0,sqft:1200,soldDate:"Sep 2025",url:"https://www.redfin.com/PA/Narberth/226-N-Essex-Ave-19072/unit-306/home/38090981",lat:40.0080481,lng:-75.2637197},
+  {addr:"1650 Oakwood Dr E108",propType:"Condo",price:225500,beds:1,baths:1.0,sqft:858,soldDate:"Jun 2025",url:"https://www.redfin.com/PA/Narberth/1650-Oakwood-Dr-19072/unit-E108/home/167051566",lat:40.0401933,lng:-75.2562854},
+  {addr:"1655 Oakwood Dr N323",propType:"Condo",price:400000,beds:3,baths:2.5,sqft:1370,soldDate:"Aug 2025",url:"https://www.redfin.com/PA/Narberth/1655-Oakwood-Dr-19072/unit-N323/home/195919260",lat:40.0403068,lng:-75.2547586},
+  {addr:"1650 Oakwood Dr E202",propType:"Condo",price:340000,beds:2,baths:2.0,sqft:1120,soldDate:"Aug 2025",url:"https://www.redfin.com/PA/Narberth/1650-Oakwood-Dr-19072/unit-E-202/home/196275861",lat:40.0408274,lng:-75.2561535},
+  {addr:"1655 Oakwood Dr N420",propType:"Condo",price:247000,beds:1,baths:1.0,sqft:858,soldDate:"Dec 2025",url:"https://www.redfin.com/PA/Narberth/1655-Oakwood-Dr-19072/unit-N-420/home/145917522",lat:40.0403068,lng:-75.2547586},
+];
+
+function affordLevels(kind, price) {
+  const th = kind==='rental' ? T.rent : T.purchase;
+  return [1,2,3,4].filter(n => price <= th[n]);
+}
+function pipBadge(levels) {
+  if (levels.length===0) return '<span class="not-affordable">&#10060; Above all thresholds</span>';
+  const pips = [1,2,3,4].map(n=>`<span class="person-pip${levels.includes(n)?'':' off'}">&#128100;</span>`).join('');
+  return `<span class="afford-badge"><span class="check">&#9989;</span>${pips}</span>`;
+}
+const allActive = [
+  ...forSaleListings.map(l=>({...l,kind:'forsale',levels:affordLevels('forsale',l.price),affordable:affordLevels('forsale',l.price).length>0})),
+  ...rentalListings.map(l=>({...l,kind:'rental',levels:affordLevels('rental',l.price),affordable:affordLevels('rental',l.price).length>0})),
+];
+const allSold = recentlySold.map(l=>({...l,kind:'sold',levels:[],affordable:false}));
+const all = [...allActive,...allSold];
+
+const activeAff = allActive.filter(l=>l.affordable).length;
+const affPct = Math.round(activeAff/allActive.length*100);
+const soldPrices = [...recentlySold].map(l=>l.price).sort((a,b)=>a-b);
+const medianSold = soldPrices[Math.floor(soldPrices.length/2)];
+document.getElementById('statsGrid').innerHTML = `
+  <div class="map-stat-card"><div class="value">${allActive.length}</div><div class="label">Active Listings</div></div>
+  <div class="map-stat-card"><div class="value green">${activeAff}</div><div class="label">Affordable Active</div></div>
+  <div class="map-stat-card"><div class="value ${affPct<20?'red':'green'}">${affPct}%</div><div class="label">% Active Affordable</div></div>
+  <div class="map-stat-card"><div class="value">${forSaleListings.length}</div><div class="label">For Sale</div></div>
+  <div class="map-stat-card"><div class="value">${rentalListings.length}</div><div class="label">Rentals</div></div>
+  <div class="map-stat-card"><div class="value red">$${(medianSold/1000).toFixed(0)}k</div><div class="label">Median Recent Sale</div></div>
+  <div class="map-stat-card"><div class="value">${allSold.length}</div><div class="label">Recent Sales (12 mo)</div></div>
+`;
+
+function hhBreakdown(listings,kind,label){const lbls={1:{icon:'&#128100;',text:'1 Person',sub:kind==='rental'?'&le;$1,522/mo':'&le;$227k'},2:{icon:'&#128100;&#128100;',text:'2 Person',sub:kind==='rental'?'&le;$1,760/mo':'&le;$263k'},3:{icon:'&#128100;&#128100;&#128100;',text:'3 Person',sub:kind==='rental'?'&le;$1,999/mo':'&le;$298k'},4:{icon:'&#128100;&#128100;&#128100;&#128100;',text:'Family (4)',sub:kind==='rental'?'&le;$2,235/mo':'&le;$446k'}};let rows='';[1,2,3,4].forEach(n=>{const th=kind==='rental'?T.rent[n]:T.purchase[n];const count=listings.filter(l=>l.price<=th).length;const l=lbls[n];rows+=`<div class="hh-row"><span class="hh-label"><span class="pip">${l.icon}</span> ${l.text} <span style="color:#999;font-size:0.73rem">${l.sub}</span></span><span class="hh-count ${count===0?'zero':''}">${count} unit${count!==1?'s':''}</span></div>`;});return `<div class="breakdown-card"><h4>${label}</h4>${rows}</div>`;}
+document.getElementById('breakdownSection').innerHTML=hhBreakdown(rentalListings,'rental','Rental Affordability by Household Size')+hhBreakdown(forSaleListings,'forsale','For-Sale Affordability by Household Size');
+
+const typeCounts={},typeAff={};
+allActive.forEach(l=>{typeCounts[l.propType]=(typeCounts[l.propType]||0)+1;if(l.affordable)typeAff[l.propType]=(typeAff[l.propType]||0)+1;});
+let typeHTML='<h3>Active Listing Types</h3><div class="type-tags">';
+Object.entries(typeCounts).sort((a,b)=>b[1]-a[1]).forEach(([t,n])=>{const a=typeAff[t]||0;typeHTML+=`<span class="type-tag${a>0?' has-affordable':''}">${t}: ${n} (${a} affordable)</span>`;});
+typeHTML+='</div>';
+document.getElementById('typeBreakdown').innerHTML=typeHTML;
+
+function initMap() {
+  const map = L.map('map').setView([40.007,-75.262],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19}).addTo(map);
+  function pin(color){return L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.45)"></div>`,iconSize:[13,13],iconAnchor:[6,6],popupAnchor:[0,-8]});}
+  allActive.forEach(l=>{
+    if(!l.lat||!l.lng)return;
+    const color=l.affordable?'#2e7d32':(l.kind==='rental'?'#1565c0':'#c62828');
+    const priceStr=l.kind==='rental'?(l.priceDisplay||'$'+l.price.toLocaleString()+'/mo'):'$'+l.price.toLocaleString();
+    const affHTML=l.affordable?'<span style="color:#2e7d32;font-weight:600">Affordable</span>':'<span style="color:#c62828;font-weight:600">Above all thresholds</span>';
+    const popup='<div style="font-size:13px;line-height:1.6;min-width:210px"><strong>'+l.addr+'</strong><br><span style="color:#666">'+l.propType+' &middot; '+(l.kind==='rental'?'Rental':'For Sale')+'</span><br><span style="font-size:15px;font-weight:700;color:#1a3a5c">'+priceStr+'</span><br>'+(l.beds||'&mdash;')+' bd &middot; '+(l.baths||'&mdash;')+' bath'+(l.sqft?' &middot; '+l.sqft.toLocaleString()+' sqft':'')+'<br>'+affHTML+'<br>'+(l.url?'<a href="'+l.url+'" target="_blank" style="color:#1a3a5c;font-size:11px">View listing &rarr;</a>':'')+'</div>';
+    L.marker([l.lat,l.lng],{icon:pin(color)}).addTo(map).bindPopup(popup);
+  });
+  allSold.forEach(l=>{
+    if(!l.lat||!l.lng)return;
+    const popup='<div style="font-size:13px;line-height:1.6;min-width:200px"><strong>'+l.addr+'</strong><br><span style="color:#666">'+l.propType+' &middot; Sold '+l.soldDate+'</span><br><span style="font-size:14px;font-weight:700;color:#555">Last sale: $'+l.price.toLocaleString()+'</span><br>'+l.beds+' bd &middot; '+(l.baths||'&mdash;')+' bath'+(l.sqft?' &middot; '+l.sqft.toLocaleString()+' sqft':'')+'<br>'+(l.url?'<a href="'+l.url+'" target="_blank" style="color:#1a3a5c;font-size:11px">View on Redfin &rarr;</a>':'')+'</div>';
+    L.marker([l.lat,l.lng],{icon:pin('#555555')}).addTo(map).bindPopup(popup);
+  });
+}
+
+function renderTable(filter){
+  const rows=all.filter(l=>{if(filter==='affordable')return l.affordable;if(filter==='forsale')return l.kind==='forsale';if(filter==='rental')return l.kind==='rental';if(filter==='sold')return l.kind==='sold';return true;});
+  document.getElementById('listingsBody').innerHTML=rows.map(l=>{
+    let priceStr,kindBadge,affCell;
+    if(l.kind==='rental'){priceStr=l.priceDisplay||'$'+l.price.toLocaleString()+'/mo';kindBadge='<span class="badge badge-blue">Rental</span>';affCell=pipBadge(l.levels);}
+    else if(l.kind==='sold'){priceStr='$'+l.price.toLocaleString();kindBadge='<span class="badge badge-grey">Sold '+l.soldDate+'</span>';affCell='<span class="badge badge-grey">&mdash;</span>';}
+    else{priceStr='$'+l.price.toLocaleString();kindBadge='<span class="badge badge-orange">For Sale</span>';affCell=pipBadge(l.levels);}
+    return '<tr><td>'+l.addr+'</td><td>'+l.propType+'</td><td>'+kindBadge+'</td><td><strong>'+priceStr+'</strong></td><td>'+(l.beds===0?'Studio':(l.beds||'&mdash;'))+'</td><td>'+(l.baths||'&mdash;')+'</td><td>'+(l.sqft?l.sqft.toLocaleString():'&mdash;')+'</td><td>'+affCell+'</td><td>'+(l.url?'<a href="'+l.url+'" target="_blank">View &nearr;</a>':'&mdash;')+'</td></tr>';
+  }).join('');
+}
+function filterTable(filter,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTable(filter);}
+renderTable('all');
+</script>
+</body>
+</html>
