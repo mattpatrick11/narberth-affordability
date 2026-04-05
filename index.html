@@ -41,32 +41,68 @@
       position: sticky;
       top: 0;
       z-index: 300;
-      background: #0a1a30;
+      background: #071525;
       display: flex;
+      align-items: flex-end;
       overflow-x: auto;
-      height: var(--tab-h);
-      border-bottom: 3px solid #1e3a5c;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      height: 72px;
+      border-bottom: 3px solid #60a5fa;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+      padding: 0 0.75rem;
+      gap: 0.35rem;
     }
+    :root { --tab-h: 72px; }
     #tab-bar::-webkit-scrollbar { display: none; }
+    .tab-divider {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.12);
+      flex-shrink: 0;
+      align-self: center;
+    }
     .tab-btn {
       flex-shrink: 0;
-      background: none;
-      border: none;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
       border-bottom: 3px solid transparent;
       margin-bottom: -3px;
-      color: rgba(255,255,255,0.55);
-      font-size: 0.83rem;
+      border-radius: 8px 8px 0 0;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.01em;
-      padding: 0 1.6rem;
+      padding: 0.6rem 1.4rem 0.65rem;
       cursor: pointer;
-      height: 100%;
+      height: 52px;
       transition: color 0.15s, border-color 0.15s, background 0.15s;
       white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      line-height: 1.25;
     }
-    .tab-btn:hover { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.06); }
-    .tab-btn.active { color: #fff; border-bottom-color: #60a5fa; }
+    .tab-btn .tab-num {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    .tab-btn:hover {
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.18);
+      border-bottom-color: rgba(96,165,250,0.45);
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(96,165,250,0.12);
+      border-color: rgba(96,165,250,0.4);
+      border-bottom-color: #60a5fa;
+    }
+    .tab-btn.active .tab-num { opacity: 0.8; color: #93c5fd; }
 
     /* ═══════════ TAB SECTIONS ═══════════ */
     .tab-section { display: none; }
@@ -412,9 +448,20 @@
 
 <!-- ══════════════════════ TOP TAB BAR ══════════════════════ -->
 <div id="tab-bar">
-  <button class="tab-btn active" onclick="showTab('rentals', this)">📊 Rental Market Analysis</button>
-  <button class="tab-btn" onclick="showTab('iz', this)">⚖️ Density &amp; Zoning Research</button>
-  <button class="tab-btn" onclick="showTab('map', this)">🗺️ Property Map</button>
+  <button class="tab-btn active" onclick="showTab('rentals', this)">
+    <span class="tab-num">Tab 1</span>
+    📊 Rental Market Analysis
+  </button>
+  <div class="tab-divider"></div>
+  <button class="tab-btn" onclick="showTab('map', this)">
+    <span class="tab-num">Tab 2</span>
+    🗺️ Property Map
+  </button>
+  <div class="tab-divider"></div>
+  <button class="tab-btn" onclick="showTab('iz', this)">
+    <span class="tab-num">Tab 3</span>
+    ⚖️ Density &amp; Zoning Research
+  </button>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
